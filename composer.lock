@@ -1,0 +1,50 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "2fb9803de3d8db45c3d5d31c8b36f1d8",
+    "packages": [
+        {
+            "name": "ekowabaka/clearice",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ekowabaka/clearice.git",
+                "reference": "41cac1ebc70147a25d66d85853e47fe86bf4a98f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/41cac1ebc70147a25d66d85853e47fe86bf4a98f",
+                "reference": "41cac1ebc70147a25d66d85853e47fe86bf4a98f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A tool for parsing command line arguments",
+            "time": "2014-03-29 13:27:08"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": [
+
+    ],
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "ekowabaka/clearice" : "v0.2.1"
+    }
+}
