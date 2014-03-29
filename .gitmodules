@@ -1,0 +1,3 @@
+[submodule "bin/clearice"]
+	path = bin/clearice
+	url = https://github.com/ekowabaka/clearice.git
