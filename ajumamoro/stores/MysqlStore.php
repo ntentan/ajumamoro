@@ -1,4 +1,9 @@
 <?php
+
+namespace ajumamoro\stores;
+
+use ajumamoro\Store;
+
 class MysqlStore extends Store
 {
     public function get() 
@@ -11,7 +16,7 @@ class MysqlStore extends Store
         
     }
 
-    public function put($job, $queue) 
+    public function put($job) 
     {
         
     }
