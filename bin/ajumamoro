@@ -1,9 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$composer_autoload = __DIR__ . "/../autoload.php";
-if(file_exists($composer_autoload)) 
-    require $composer_autoload;
+require __DIR__ . "/../autoload.php";
+
 
 error_reporting(E_ALL ^ E_NOTICE);
 
