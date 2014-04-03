@@ -1,4 +1,5 @@
 <?php
+
 namespace ajumamoro;
 
 abstract class Store
@@ -9,8 +10,9 @@ abstract class Store
     
     public static function factory($params)
     {
-        $storeDriverClass = 'stores\\' . ucfirst($params['type']) . 'Store';
+        $storeDriverClass = '\\ajumamoro\\stores\\' . ucfirst($params['store']) . 'Store';
         $storeDriver = new $storeDriverClass($params);
+        $storeDriver->init();
         return $storeDriver;
     }
 }

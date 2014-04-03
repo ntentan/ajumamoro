@@ -10,7 +10,7 @@ class Ajumamoro
     private static $store = false;
     private static $params = false;
     
-    private static function init($params)
+    public static function init($params)
     {
         self::$params = $params;
     }
@@ -23,6 +23,11 @@ class Ajumamoro
             self::$store->init();
         }
         return self::$store;
+    }
+    
+    public static function executeNextJob()
+    {
+        $job = self::getStore()->get();
     }
     
     public static function add($job)

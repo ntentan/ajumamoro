@@ -1,0 +1,86 @@
+#!/usr/bin/env php
+<?php
+require __DIR__ . "/../vendor/autoload.php";
+error_reporting(E_ALL ^ E_NOTICE);
+
+ClearIce::addOptions(
+    array(
+        'short' => 's',
+        'long' => 'store',
+        'help' => 'backend for storing job tasks',
+        'has_value' => true,
+        'value' => 'STORE'
+    ),
+    array(
+        'short' => 'h',
+        'long' => 'host',
+        'help' => 'hostname of the storage backend server',
+        'has_value' => true,
+        'value' => 'HOST'
+    ),
+    array(
+        'short' => 'u',
+        'long' => 'user',
+        'help' => 'username to access the storage backend server',
+        'has_value' => true,
+        'value' => 'USERNAME'
+    ),
+    array(
+        'short' => 'p',
+        'long' => 'password',
+        'help' => 'password of the user through which you are accessing the storag backend server',
+        'has_value' => true,
+        'value' => 'PASSWORD'
+    ),
+    array(
+        'short' => 'n',
+        'long' => 'name',
+        'help' => 'name of the database on the server',
+        'has_value' => true,
+        'value' => 'DBNAME'
+    ),
+    array(
+        'short' => 'd',
+        'long' => 'daemon',
+        'help' => 'run the process as a daemon',
+    )
+);
+
+ClearIce::addHelp();
+ClearIce::setStrict(true);
+$arguments = ClearIce::parse();
+
+// Fork and start running as a daemon
+if($arguments['daemon'] === true)
+{
+    print "Starting daemon ...\n";
+    $pid = pcntl_fork();
+    if($pid == -1)
+    {
+        fputs(STDERR, "Could not start daemon.\n");
+    }
+    else if($pid)
+    {
+        return;
+    }
+    else
+    {
+        main_loop($arguments);
+    }
+}
+else
+{
+    main_loop($arguments);
+}
+
+function main_loop($arguments)
+{
+    // Get Store;
+    \ajumamoro\Ajumamoro::init($arguments);
+    do
+    {
+        \ajumamoro\Ajumamoro::executeNextJob();
+        usleep(200);
+    }
+    while(true);
+}

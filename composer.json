@@ -1,5 +1,10 @@
 {
+    "name" : "ekowabaka/ajumamoro",
     "require": {
-        "ekowabaka/clearice" : "v0.2.1"
-    }
+        "ekowabaka/clearice" : "v0.2.2"
+    },
+    "autoload" : {
+        "psr-4" : { "ajumamoro\\" : "src/"}
+    },
+    "bin" : ["bin/ajumamoro"]
 }

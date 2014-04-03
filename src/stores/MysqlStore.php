@@ -2,9 +2,7 @@
 
 namespace ajumamoro\stores;
 
-use ajumamoro\Store;
-
-class MysqlStore extends Store
+class MysqlStore extends PdoStore
 {
     public function get() 
     {
