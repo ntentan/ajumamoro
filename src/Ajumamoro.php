@@ -25,9 +25,9 @@ class Ajumamoro
         return self::$store;
     }
     
-    public static function executeNextJob()
+    public static function getNextJob()
     {
-        $job = self::getStore()->get();
+        return self::getStore()->get();
     }
     
     public static function add($job)

@@ -85,7 +85,8 @@ function main_loop($arguments)
     \ajumamoro\Ajumamoro::init($arguments);
     do
     {
-        \ajumamoro\Ajumamoro::executeNextJob();
+        $job = unserialize(\ajumamoro\Ajumamoro::getNextJob());
+        $job->go();
         usleep(200);
     }
     while(true);
