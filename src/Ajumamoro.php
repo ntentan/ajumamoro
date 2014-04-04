@@ -27,12 +27,23 @@ class Ajumamoro
     
     public static function getNextJob()
     {
-        return self::getStore()->get();
+        $nextJob = self::getStore()->get();
+        $nextJob = unserialize($nextJob['object']);
+        if(is_a($nextJob, "\\ajumamoro\\Ajuma"))
+        {
+            return $nextJob;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     public static function add($job)
     {
-        self::$store->put($job);
+        $store = self::getStore();
+        $store->put(serialize($job));
+        return $store->lastJobId();
     }
 }
 

@@ -7,13 +7,13 @@ abstract class Store
     abstract public function put($job);
     abstract public function get();
     abstract public function init();
+    abstract public function lastJobId();
     
     public static function factory($params)
     {
         if(!isset($params['store']) || $params['store'] == '')
         {
-            fputs(STDERR, "Please specify a store type using the --store option\n");
-            die();
+            throw new Exception('Please specify a store for the jobs.');
         }
         $storeDriverClass = '\\ajumamoro\\stores\\' . ucfirst($params['store']) . 'Store';
         $storeDriver = new $storeDriverClass($params);

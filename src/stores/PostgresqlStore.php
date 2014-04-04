@@ -3,6 +3,8 @@ namespace ajumamoro\stores;
 
 class PostgresqlStore extends PdoStore
 {    
+    private $lastValStatement;
+    
     public function __construct($params)
     {
         $host = isset($params['host']) ? $params['host'] : 'localhost';
@@ -16,6 +18,15 @@ class PostgresqlStore extends PdoStore
 
     public function init() 
     {
-        $this->db->query("create table if not exists(id serial primary key, object text)");
+        parent::init(); 
+        $this->db->query("create table if not exists jobs (id serial primary key, object text)");
+        $this->lastValStatement = $this->db->prepare("SELECT LASTVAL() as last");
+    }
+    
+    public function lastJobId() 
+    {
+        $this->lastValStatement->execute();
+        $lastId = $this->lastValStatement->fetch();
+        return $lastId['last'];
     }
 }

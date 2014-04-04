@@ -7,26 +7,43 @@ abstract class PdoStore extends Store
 {
     /**
      * The PDO instance
-     * @var PDO
+     * @var \PDO
      */
     protected $db;
-    
-    protected function connect()
-    {
-        
-    }
+    protected $insertStatement;
+    protected $retrieveStatement;
     
     public function get() 
     {
-        $job = $this->db->query("SELECT * FROM jobs ORDER BY id DESC LIMIT 1");
-        if($job->rowCount == 1) return $job[0]; else return false;
-        
+        $this->retrieveStatement->execute();
+        if($this->retrieveStatement->rowCount() == 1) 
+        {
+            $job = $this->retrieveStatement->fetch();
+            return array(
+                'id' => $job['id'],
+                'object' => stream_get_contents($job['object'])
+            );
+        }
+        else 
+        {
+            return false;
+        }
+    }
+    
+    public function init()
+    {
+        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object) VALUES(?)");
+        $this->retrieveStatement = $this->db->prepare("SELECT * FROM jobs ORDER BY id DESC LIMIT 1");
     }
 
     public function put($job) 
+    {   
+        $this->insertStatement->bindParam(1, $job, \PDO::PARAM_LOB);
+        $this->insertStatement->execute();
+    }
+    
+    public function lastJobId() 
     {
-        $job = $this->db->query(
-            sprintf("INSERT INTO jobs(object) VALUES('%s') ORDER BY id DESC LIMIT 1", serialize($job))
-        );
+        return $this->db->lastInsertId();
     }
 }

@@ -85,8 +85,12 @@ function main_loop($arguments)
     \ajumamoro\Ajumamoro::init($arguments);
     do
     {
-        $job = unserialize(\ajumamoro\Ajumamoro::getNextJob());
-        $job->go();
+        $job = \ajumamoro\Ajumamoro::getNextJob();
+        if($job !== false) 
+        {
+            echo "Received job. Executing ...";
+            $job->go();
+        }
         usleep(200);
     }
     while(true);
