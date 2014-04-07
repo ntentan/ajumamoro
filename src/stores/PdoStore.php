@@ -12,6 +12,7 @@ abstract class PdoStore extends Store
     protected $db;
     protected $insertStatement;
     protected $retrieveStatement;
+    protected $deleteStatement;
     
     public function get() 
     {
@@ -34,6 +35,7 @@ abstract class PdoStore extends Store
     {
         $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object) VALUES(?)");
         $this->retrieveStatement = $this->db->prepare("SELECT * FROM jobs ORDER BY id DESC LIMIT 1");
+        $this->deleteStatement = $this->db->prepare("DELETE FROM jobs WHERE id = ?");
     }
 
     public function put($job) 
@@ -46,4 +48,13 @@ abstract class PdoStore extends Store
     {
         return $this->db->lastInsertId();
     }
+    
+    public function delete($job)
+    {
+        //$this->db->query("DELETE FROM jobs WHERE id = '{$job->getId()}'");  
+        $jobId = $job->getId();
+        $this->deleteStatement->bindParam(1, $jobId, \PDO::PARAM_INT);
+        $this->deleteStatement->execute(array($jobId));
+    }
 }
+

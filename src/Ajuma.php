@@ -5,6 +5,7 @@ abstract class Ajuma
 {
     abstract public function go();
     private $attributes;
+    private $id;
     
     public function addAttribute($attribute)
     {
@@ -24,5 +25,15 @@ abstract class Ajuma
     public function tearDown()
     {
         
+    }    
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
     }
 }

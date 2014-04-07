@@ -27,16 +27,22 @@ class Ajumamoro
     
     public static function getNextJob()
     {
-        $nextJob = self::getStore()->get();
-        $nextJob = unserialize($nextJob['object']);
-        if(is_a($nextJob, "\\ajumamoro\\Ajuma"))
+        $jobInfo = self::getStore()->get();
+        $job = unserialize($jobInfo['object']);
+        if(is_a($job, "\\ajumamoro\\Ajuma"))
         {
-            return $nextJob;
+            $job->setId($jobInfo['id']);
+            return $job;
         }
         else
         {
             return false;
         }
+    }
+    
+    public static function deleteJob($job)
+    {
+        self::getStore()->delete($job);
     }
     
     public static function add($job)

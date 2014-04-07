@@ -88,8 +88,11 @@ function main_loop($arguments)
         $job = \ajumamoro\Ajumamoro::getNextJob();
         if($job !== false) 
         {
-            echo "Received job. Executing ...";
+            print "Received job ...\n";
+            $job->setup();
             $job->go();
+            $job->tearDown();
+            \ajumamoro\Ajumamoro::deleteJob($job);
         }
         usleep(200);
     }
@@ -98,5 +101,5 @@ function main_loop($arguments)
 
 function class_loader($class)
 {
-    require str_replace(array("ajumamoro\\", '\\'), array("", "/"), $class) . '.php';
+    @include_once str_replace(array("ajumamoro\\", '\\'), array("", "/"), $class) . '.php';
 }

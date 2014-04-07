@@ -8,6 +8,7 @@ abstract class Store
     abstract public function get();
     abstract public function init();
     abstract public function lastJobId();
+    abstract public function delete($job);
     
     public static function factory($params)
     {
