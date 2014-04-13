@@ -20,8 +20,8 @@ abstract class PdoStore extends Store
     private function getTime()
     {
         $time = microtime(true);
-        $micro = round(($time - floor($time))* 1000000);
-        return(date("Y-m-d H:i:s.{$micro}O", $time));
+        $micro = date('s', $time) + ($time - floor($time));
+        return date("Y-m-d H:i:{$micro}O", $time);
     }
     
     public function get() 

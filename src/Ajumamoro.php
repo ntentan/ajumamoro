@@ -15,7 +15,11 @@ class Ajumamoro
         self::$params = $params;
     }
     
-    private static function getStore()
+    /**
+     * 
+     * @return ajumamoro\Store
+     */
+    public static function getStore()
     {
         if(self::$store === false)
         {
@@ -23,6 +27,11 @@ class Ajumamoro
             self::$store->init();
         }
         return self::$store;
+    }
+    
+    public static function resetStore()
+    {
+        self::$store = false;
     }
     
     public static function getNextJob()

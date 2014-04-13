@@ -32,26 +32,9 @@ abstract class Ajuma
     {
         $this->store = $store;
     }
-    
-    public function setup()
-    {
-        $this->store->markStarted($this->id);
-        $this->__setup();
-    }
-    
-    public function tearDown()
-    {
-        $this->store->markFinished($this->id);
-        $this->__tearDown();
-    }   
-    
-    public function go()
-    {
-        $this->__go();
-    }
 
-    protected function __setup(){}
-    protected function __tearDown(){}
+    public function setup(){}
+    public function tearDown(){}
     
-    abstract protected function __go();
+    abstract public function go();
 }

@@ -3,6 +3,8 @@
 
 require "vendor/autoload.php";
 
+use ajumamoro\Ajumamoro;
+
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../src' . PATH_SEPARATOR . __DIR__ . '/../src/stores');
 spl_autoload_register('class_loader');
 
@@ -87,21 +89,35 @@ else
 function main_loop($arguments)
 {
     // Get Store;
-    \ajumamoro\Ajumamoro::init($arguments);
+    Ajumamoro::init($arguments);
+    $child = 'Hello';
     do
     {
-        $job = \ajumamoro\Ajumamoro::getNextJob();
-        if($arguments['use-external-worker'])
+        $job = Ajumamoro::getNextJob();
+        
+        if($job !== false)
         {
-            exec (__DIR__ . "/ajumamoro_worker " . escapeshellarg($job['object']));
+            print "Received JOB ...\n";
+            Ajumamoro::getStore()->markStarted($job->getId());
+            $pid = pcntl_fork();
+            if($pid)
+            {
+                pcntl_wait($status);
+                Ajumamoro::resetStore();
+                Ajumamoro::getStore()->markFinished($job->getId());
+            }
+            else
+            {
+                $job->setup();
+                $job->go();
+                $job->tearDown();
+                die();
+            }
         }
-        else if($job !== false)
+        else
         {
-            $job->setup();
-            $job->go();
-            $job->tearDown();
+            usleep(200);
         }
-        usleep(200);
     }
     while(true);
 }
