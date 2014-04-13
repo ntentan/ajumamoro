@@ -31,6 +31,7 @@ class Ajumamoro
         $job = unserialize($jobInfo['object']);
         if(is_a($job, "\\ajumamoro\\Ajuma"))
         {
+            $job->setStore(self::getStore());
             $job->setId($jobInfo['id']);
             return $job;
         }

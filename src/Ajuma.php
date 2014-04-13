@@ -3,9 +3,9 @@ namespace ajumamoro;
 
 abstract class Ajuma
 {
-    abstract public function go();
     private $attributes;
     private $id;
+    protected $store;
     
     public function addAttribute($attribute)
     {
@@ -16,17 +16,7 @@ abstract class Ajuma
     {
         return $this->attributes[$attribute];
     }
-    
-    public function setup()
-    {
         
-    }
-    
-    public function tearDown()
-    {
-        
-    }    
-    
     public function setId($id)
     {
         $this->id = $id;
@@ -36,4 +26,32 @@ abstract class Ajuma
     {
         return $this->id;
     }
+    
+    
+    public function setStore($store)
+    {
+        $this->store = $store;
+    }
+    
+    public function setup()
+    {
+        $this->store->markStarted($this->id);
+        $this->__setup();
+    }
+    
+    public function tearDown()
+    {
+        $this->store->markFinished($this->id);
+        $this->__tearDown();
+    }   
+    
+    public function go()
+    {
+        $this->__go();
+    }
+
+    protected function __setup(){}
+    protected function __tearDown(){}
+    
+    abstract protected function __go();
 }

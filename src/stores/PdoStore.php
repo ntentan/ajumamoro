@@ -13,6 +13,16 @@ abstract class PdoStore extends Store
     protected $insertStatement;
     protected $retrieveStatement;
     protected $deleteStatement;
+    protected $updateStatusAndStartTimeStatement;
+    protected $updateStatusAndFinishTimeStatement;
+    protected $setStatusStatement;
+    
+    private function getTime()
+    {
+        $time = microtime(true);
+        $micro = round(($time - floor($time))* 1000000);
+        return(date("Y-m-d H:i:s.{$micro}O", $time));
+    }
     
     public function get() 
     {
@@ -33,14 +43,19 @@ abstract class PdoStore extends Store
     
     public function init()
     {
-        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object) VALUES(?)");
-        $this->retrieveStatement = $this->db->prepare("SELECT * FROM jobs ORDER BY id DESC LIMIT 1");
+        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object, status, added) VALUES(?, 'QUEUED', ?)");
+        $this->retrieveStatement = $this->db->prepare("SELECT id, object FROM jobs WHERE status = 'QUEUED' ORDER BY added LIMIT 1");
         $this->deleteStatement = $this->db->prepare("DELETE FROM jobs WHERE id = ?");
+        $this->updateStatusAndFinishTimeStatement = $this->db->prepare("UPDATE jobs SET status = ?, finished = ? WHERE id = ?");
+        $this->updateStatusAndStartTimeStatement = $this->db->prepare("UPDATE jobs SET status = ?, started = ? WHERE id = ?");
+        $this->setStatusStatement = $this->db->prepare('UPDATE jobs SET status = ? WHERE id = ?');
     }
 
     public function put($job) 
-    {   
+    {
+        $date = $this->getTime();
         $this->insertStatement->bindParam(1, $job, \PDO::PARAM_LOB);
+        $this->insertStatement->bindParam(2, $date);
         $this->insertStatement->execute();
     }
     
@@ -49,12 +64,25 @@ abstract class PdoStore extends Store
         return $this->db->lastInsertId();
     }
     
-    public function delete($job)
+    public function delete($jobId)
     {
-        //$this->db->query("DELETE FROM jobs WHERE id = '{$job->getId()}'");  
-        $jobId = $job->getId();
         $this->deleteStatement->bindParam(1, $jobId, \PDO::PARAM_INT);
         $this->deleteStatement->execute(array($jobId));
+    }
+    
+    public function markStarted($jobId) 
+    {
+        $this->updateStatusAndStartTimeStatement->execute(array('EXECUTING', $this->getTime(), $jobId));
+    }
+    
+    public function markFinished($jobId) 
+    {
+        $this->updateStatusAndFinishTimeStatement->execute(array('FINISHED', $this->getTime(), $jobId));
+    }
+    
+    public function setStatus($jobId, $status) 
+    {
+        $this->updateStatusAndFinishTimeStatement->execute(array($status, $jobId));
     }
 }
 

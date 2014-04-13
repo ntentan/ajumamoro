@@ -8,7 +8,10 @@ abstract class Store
     abstract public function get();
     abstract public function init();
     abstract public function lastJobId();
-    abstract public function delete($job);
+    abstract public function delete($jobId);
+    abstract public function markStarted($jobId);
+    abstract public function markFinished($jobId);
+    abstract public function setStatus($jobId, $status);
     
     public static function factory($params)
     {

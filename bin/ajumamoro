@@ -49,7 +49,12 @@ ClearIce::addOptions(
         'short' => 'd',
         'long' => 'daemon',
         'help' => 'run the process as a daemon',
-    )
+    )/*,
+    array(
+        'short' => 'x',
+        'long' => 'use-external-wroker',
+        'help' => 'start a new process for jobs'
+    )*/
 );
 
 ClearIce::addHelp();
@@ -86,13 +91,15 @@ function main_loop($arguments)
     do
     {
         $job = \ajumamoro\Ajumamoro::getNextJob();
-        if($job !== false) 
+        if($arguments['use-external-worker'])
         {
-            print "Received job ...\n";
+            exec (__DIR__ . "/ajumamoro_worker " . escapeshellarg($job['object']));
+        }
+        else if($job !== false)
+        {
             $job->setup();
             $job->go();
             $job->tearDown();
-            \ajumamoro\Ajumamoro::deleteJob($job);
         }
         usleep(200);
     }
