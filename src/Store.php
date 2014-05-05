@@ -4,7 +4,7 @@ namespace ajumamoro;
 
 abstract class Store
 {
-    abstract public function put($job);
+    abstract public function put($job, $path);
     abstract public function get();
     abstract public function init();
     abstract public function lastJobId();

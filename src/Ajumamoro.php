@@ -34,15 +34,25 @@ class Ajumamoro
         self::$store = false;
     }
     
-    public static function getNextJob()
+    public static function getNextJob($loadClassFile = false)
     {
         $jobInfo = self::getStore()->get();
-        $job = unserialize($jobInfo['object']);
-        if(is_a($job, "\\ajumamoro\\Ajuma"))
+        if(is_array($jobInfo))
         {
-            $job->setStore(self::getStore());
-            $job->setId($jobInfo['id']);
-            return $job;
+            if($loadClassFile) require_once $jobInfo['class_file_path'];
+            $job = unserialize($jobInfo['object']);
+            if(is_a($job, "\\ajumamoro\\Ajuma"))
+            {
+                $job->setStore(self::getStore());
+                $job->setId($jobInfo['id']);
+                return $job;
+            }
+            else
+            {
+                echo "Failed to execute job ...\n";
+                self::getStore()->setStatus($jobInfo['id'], 'FAILED');
+                return false;
+            }
         }
         else
         {
@@ -58,7 +68,8 @@ class Ajumamoro
     public static function add($job)
     {
         $store = self::getStore();
-        $store->put(serialize($job));
+        $jobClass = new \ReflectionObject($job);
+        $store->put(serialize($job), $jobClass->getFileName());
         return $store->lastJobId();
     }
 }

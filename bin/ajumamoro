@@ -20,6 +20,10 @@ ClearIce::addOptions(
         'value' => 'STORE'
     ),
     array(
+        'short' => 'l',
+        'long' => 'load-class-files',
+    ),
+    array(
         'short' => 'h',
         'long' => 'host',
         'help' => 'hostname of the storage backend server',
@@ -90,10 +94,9 @@ function main_loop($arguments)
 {
     // Get Store;
     Ajumamoro::init($arguments);
-    $child = 'Hello';
     do
     {
-        $job = Ajumamoro::getNextJob();
+        $job = Ajumamoro::getNextJob($arguments['load-class-files']);
         
         if($job !== false)
         {

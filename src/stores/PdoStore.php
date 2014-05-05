@@ -32,7 +32,8 @@ abstract class PdoStore extends Store
             $job = $this->retrieveStatement->fetch();
             return array(
                 'id' => $job['id'],
-                'object' => stream_get_contents($job['object'])
+                'object' => stream_get_contents($job['object']),
+                'class_file_path' => $job['class_file_path']
             );
         }
         else 
@@ -43,19 +44,20 @@ abstract class PdoStore extends Store
     
     public function init()
     {
-        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object, status, added) VALUES(?, 'QUEUED', ?)");
-        $this->retrieveStatement = $this->db->prepare("SELECT id, object FROM jobs WHERE status = 'QUEUED' ORDER BY added LIMIT 1");
+        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object, status, added, class_file_path) VALUES(?, 'QUEUED', ?, ?)");
+        $this->retrieveStatement = $this->db->prepare("SELECT id, object, class_file_path FROM jobs WHERE status = 'QUEUED' ORDER BY added LIMIT 1");
         $this->deleteStatement = $this->db->prepare("DELETE FROM jobs WHERE id = ?");
         $this->updateStatusAndFinishTimeStatement = $this->db->prepare("UPDATE jobs SET status = ?, finished = ? WHERE id = ?");
         $this->updateStatusAndStartTimeStatement = $this->db->prepare("UPDATE jobs SET status = ?, started = ? WHERE id = ?");
         $this->setStatusStatement = $this->db->prepare('UPDATE jobs SET status = ? WHERE id = ?');
     }
 
-    public function put($job) 
+    public function put($job, $path) 
     {
         $date = $this->getTime();
         $this->insertStatement->bindParam(1, $job, \PDO::PARAM_LOB);
         $this->insertStatement->bindParam(2, $date);
+        $this->insertStatement->bindParam(3, $path);
         $this->insertStatement->execute();
     }
     
@@ -82,7 +84,7 @@ abstract class PdoStore extends Store
     
     public function setStatus($jobId, $status) 
     {
-        $this->updateStatusAndFinishTimeStatement->execute(array($status, $jobId));
+        $this->updateStatusAndFinishTimeStatement->execute(array($status, $this->getTime(), $jobId));
     }
 }
 
