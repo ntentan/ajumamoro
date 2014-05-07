@@ -1,20 +1,40 @@
 <?php
 namespace ajumamoro;
 
-abstract class Ajuma
+abstract class Ajuma implements \ArrayAccess
 {
     private $attributes;
     private $id;
     protected $store;
     
-    public function addAttribute($attribute)
+    public function offsetGet($offset)
     {
-        $this->attributes[] = $attribute;
+        return $this->attributes[$offset];
+    }
+
+    public function offsetSet($offset,$value)
+    {
+        $this->attributes[$offset] = $value;
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->attributes[$offset]);
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->attributes[$offset]);
+    } 
+    
+    public function addAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
     }
     
-    public function getAttribute($attribute)
+    public function getAttribute($key)
     {
-        return $this->attributes[$attribute];
+        return $this->attributes[$key];
     }
         
     public function setId($id)
