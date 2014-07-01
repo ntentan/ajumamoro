@@ -15,13 +15,14 @@ ClearIce::addOptions(
     array(
         'short' => 's',
         'long' => 'store',
-        'help' => 'backend for storing job tasks',
+        'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
         'has_value' => true,
         'value' => 'STORE'
     ),
     array(
         'short' => 'l',
         'long' => 'load-class-files',
+        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.'
     ),
     array(
         'short' => 'h',
@@ -66,6 +67,19 @@ ClearIce::addOptions(
 ClearIce::addHelp();
 ClearIce::setStrict(true);
 $arguments = ClearIce::parse();
+ClearIce::setDescription(
+<<<EOT
+Ajumamoro is a tool for running background tasks in PHP apps.
+        
+Usage: {$argv[0]} [options]
+        
+EOT
+);
+
+if(count($arguments) === 0){
+    echo ClearIce::getHelpMessage();
+    die();
+}
 
 // Fork and start running as a daemon
 if($arguments['daemon'] === true)
@@ -93,7 +107,13 @@ else
 function main_loop($arguments)
 {
     // Get Store;
-    Ajumamoro::init($arguments);
+    try{
+        Ajumamoro::init($arguments);
+    }
+    catch(Exception $e){
+        fputs(STDERR, 'Failed to initialize ajumamoro: ' . $e->getMessage());
+    };
+    
     do
     {
         $job = Ajumamoro::getNextJob($arguments['load-class-files']);
