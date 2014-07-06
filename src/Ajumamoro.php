@@ -65,7 +65,7 @@ class Ajumamoro
         self::getStore()->delete($job);
     }
     
-    public static function add($job)
+    public static function add(Ajuma $job)
     {
         $store = self::getStore();
         $jobClass = new \ReflectionObject($job);

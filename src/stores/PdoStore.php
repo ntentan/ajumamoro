@@ -58,7 +58,10 @@ abstract class PdoStore extends Store
         $this->insertStatement->bindParam(1, $job, \PDO::PARAM_LOB);
         $this->insertStatement->bindParam(2, $date);
         $this->insertStatement->bindParam(3, $path);
-        $this->insertStatement->execute();
+        if(!$this->insertStatement->execute()){
+            $error = $this->insertStatement->errorInfo();
+            print $error[2];
+        }
     }
     
     public function lastJobId() 
