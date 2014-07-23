@@ -14,7 +14,7 @@ abstract class Ajuma implements \ArrayAccess
     
     public function __get($name)
     {
-        return $value;
+        return $this->attributes[$name];
     }
     
     public function offsetGet($offset)
