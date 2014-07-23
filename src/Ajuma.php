@@ -7,6 +7,16 @@ abstract class Ajuma implements \ArrayAccess
     private $id;
     protected $store;
     
+    public function __set($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+    
+    public function __get($name)
+    {
+        return $value;
+    }
+    
     public function offsetGet($offset)
     {
         return $this->attributes[$offset];

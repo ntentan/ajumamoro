@@ -20,7 +20,9 @@ abstract class Store
             throw new Exception('Please specify a store for the jobs.');
         }
         $storeDriverClass = '\\ajumamoro\\stores\\' . ucfirst($params['store']) . 'Store';
+        
         $storeDriver = new $storeDriverClass($params);
+        
         $storeDriver->init();
         return $storeDriver;
     }
