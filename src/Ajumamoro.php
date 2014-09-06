@@ -69,7 +69,7 @@ class Ajumamoro
     {
         $store = self::getStore();
         $jobClass = new \ReflectionObject($job);
-        $store->put(serialize($job), $jobClass->getFileName());
+        $store->put(serialize($job), $jobClass->getFileName(), $job->getTag());
         return $store->lastJobId();
     }
 }

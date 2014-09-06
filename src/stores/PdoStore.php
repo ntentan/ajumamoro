@@ -44,7 +44,7 @@ abstract class PdoStore extends Store
     
     public function init()
     {
-        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object, status, added, class_file_path) VALUES(?, 'QUEUED', ?, ?)");
+        $this->insertStatement = $this->db->prepare("INSERT INTO jobs(object, status, added, class_file_path, tag) VALUES(?, 'QUEUED', ?, ?, ?)");
         $this->retrieveStatement = $this->db->prepare("SELECT id, object, class_file_path FROM jobs WHERE status = 'QUEUED' ORDER BY added LIMIT 1");
         $this->deleteStatement = $this->db->prepare("DELETE FROM jobs WHERE id = ?");
         $this->updateStatusAndFinishTimeStatement = $this->db->prepare("UPDATE jobs SET status = ?, finished = ? WHERE id = ?");
@@ -52,12 +52,13 @@ abstract class PdoStore extends Store
         $this->setStatusStatement = $this->db->prepare('UPDATE jobs SET status = ? WHERE id = ?');
     }
 
-    public function put($job, $path) 
+    public function put($job, $path, $tag) 
     {
         $date = $this->getTime();
         $this->insertStatement->bindParam(1, $job, \PDO::PARAM_LOB);
         $this->insertStatement->bindParam(2, $date);
         $this->insertStatement->bindParam(3, $path);
+        $this->insertStatement->bindParam(4, $tag);
         if(!$this->insertStatement->execute()){
             $error = $this->insertStatement->errorInfo();
             print $error[2];

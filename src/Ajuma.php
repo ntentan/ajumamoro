@@ -5,6 +5,7 @@ abstract class Ajuma implements \ArrayAccess
 {
     private $attributes;
     private $id;
+    private $tag;
     protected $store;
     
     public function __set($name, $value)
@@ -61,6 +62,16 @@ abstract class Ajuma implements \ArrayAccess
     public function setStore($store)
     {
         $this->store = $store;
+    }
+    
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+    }
+    
+    public function getTag($tag)
+    {
+        return $this->tag;
     }
 
     public function setup(){}

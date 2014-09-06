@@ -33,6 +33,7 @@ class PostgresqlStore extends PdoStore
               added timestamp without time zone,
               object bytea,
               finished timestamp without time zone,
+              tag character varying,
               CONSTRAINT jobs_pkey PRIMARY KEY (id)
             )"
         );
