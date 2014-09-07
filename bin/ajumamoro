@@ -10,8 +10,9 @@ spl_autoload_register('class_loader');
 
 
 error_reporting(E_ALL ^ E_NOTICE);
+$cli = new ClearIce();
 
-ClearIce::addOptions(
+$cli->addOptions(
     array(
         'short' => 's',
         'long' => 'store',
@@ -64,10 +65,10 @@ ClearIce::addOptions(
     )*/
 );
 
-ClearIce::addHelp();
-ClearIce::setStrict(true);
-$arguments = ClearIce::parse();
-ClearIce::setDescription(
+$cli->addHelp();
+$cli->setStrict(true);
+$arguments = $cli->parse();
+$cli->setDescription(
 <<<EOT
 Ajumamoro is a tool for running background tasks in PHP apps.
         
@@ -77,7 +78,7 @@ EOT
 );
 
 if(count($arguments) === 0){
-    echo ClearIce::getHelpMessage();
+    echo $cli->getHelpMessage();
     die();
 }
 
