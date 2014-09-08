@@ -60,6 +60,11 @@ class Ajumamoro
         }
     }
     
+    public static function getJobWithTag($tag)
+    {
+        
+    }
+    
     public static function deleteJob($job)
     {
         self::getStore()->delete($job);

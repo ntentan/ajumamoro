@@ -7,3 +7,4 @@ for your own storage backend.
 
 Using Ajumamoro
 ---------------
+Ajumamoro can be installed as a composer dependency for your app.
