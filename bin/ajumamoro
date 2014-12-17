@@ -4,15 +4,18 @@
 require "vendor/autoload.php";
 
 use ajumamoro\Ajumamoro;
+use clearice\ClearIce;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../src' . PATH_SEPARATOR . __DIR__ . '/../src/stores');
-spl_autoload_register('class_loader');
+//set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../src' . PATH_SEPARATOR . __DIR__ . '/../src/stores');
+//spl_autoload_register('class_loader');
 
 
 error_reporting(E_ALL ^ E_NOTICE);
 $cli = new ClearIce();
 
-$cli->addOptions(
+ClearIce::addOptions(
     array(
         'short' => 's',
         'long' => 'store',
@@ -65,10 +68,10 @@ $cli->addOptions(
     )*/
 );
 
-$cli->addHelp();
-$cli->setStrict(true);
-$arguments = $cli->parse();
-$cli->setDescription(
+ClearIce::addHelp();
+ClearIce::setStrict(true);
+$arguments = ClearIce::parse();
+ClearIce::setDescription(
 <<<EOT
 Ajumamoro is a tool for running background tasks in PHP apps.
         
@@ -78,14 +81,16 @@ EOT
 );
 
 if(count($arguments) === 0){
-    echo $cli->getHelpMessage();
+    echo ClearIce::getHelpMessage();
     die();
 }
+global $logger;
+$logger = new Logger();
 
 // Fork and start running as a daemon
 if($arguments['daemon'] === true)
 {
-    print "Starting daemon ...\n";
+    $logger->pushHandler(new StreamHandler('ajumamoro.log'));
     $pid = pcntl_fork();
     if($pid == -1)
     {
@@ -107,6 +112,8 @@ else
 
 function main_loop($arguments)
 {
+    global $logger;
+    $logger->addInfo("Starting daemon");
     // Get Store;
     try{
         Ajumamoro::init($arguments);
@@ -117,11 +124,17 @@ function main_loop($arguments)
     
     do
     {
-        $job = Ajumamoro::getNextJob($arguments['load-class-files']);
+        try{
+            $job = Ajumamoro::getNextJob($arguments['load-class-files']);
+        }
+        catch(ajumamoro\Exception $e)
+        {
+            
+        }
         
         if($job !== false)
         {
-            print "Received JOB ...\n";
+            //"Received JOB ...\n";
             Ajumamoro::getStore()->markStarted($job->getId());
             $pid = pcntl_fork();
             if($pid)
@@ -146,7 +159,7 @@ function main_loop($arguments)
     while(true);
 }
 
-function class_loader($class)
+/*function class_loader($class)
 {
     @include_once str_replace(array("ajumamoro\\", '\\'), array("", "/"), $class) . '.php';
-}
+}*/
