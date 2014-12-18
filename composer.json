@@ -2,7 +2,7 @@
     "name" : "ekowabaka/ajumamoro",
     "require": {
         "ekowabaka/clearice" : "0.3.*",
-        "monolog/monolog" : "1.*"
+        "ntentan/logger" : "0.1.*"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}
