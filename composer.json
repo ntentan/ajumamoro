@@ -1,7 +1,7 @@
 {
     "name" : "ekowabaka/ajumamoro",
     "require": {
-        "ekowabaka/clearice" : "0.3.*",
+        "ekowabaka/clearice" : "0.4.*",
         "ntentan/logger" : "0.1.*"
     },
     "autoload" : {
