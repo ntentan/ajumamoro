@@ -23,7 +23,7 @@ class Configuration
         return self::$configuration;
     }
     
-    public static function getConfiguration($key = null)
+    public static function get($key = null, $default = null)
     {
         if($key === null)
         {
@@ -31,7 +31,7 @@ class Configuration
         }
         else
         {
-            return self::$configuration[$key];
+            return isset(self::$configuration[$key]) ? self::$configuration[$key] : $default;
         }
     }
 }

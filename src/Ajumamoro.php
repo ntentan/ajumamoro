@@ -88,6 +88,35 @@ class Ajumamoro
         return $store->lastJobId();
     }
     
+    private static function executeJob(Ajuma $job)
+    {
+        self::$jobId = $job->getId();
+        Logger::notice("Recived a new job #" . self::$jobId);
+        self::getStore()->markStarted(self::$jobId);
+        $pid = pcntl_fork();
+        if($pid)
+        {
+            pcntl_wait($status);
+            self::resetStore();
+            self::getStore()->markFinished(self::$jobId);
+        }
+        else
+        {
+            try{
+                $job->setup();
+                $job->go();
+                $job->tearDown();
+                Logger::notice("Job #" . self::$jobId . " finished.");
+            }
+            catch(\Exception $e)
+            {
+                self::logException($e, "Job #" . self::$jobId . " Exception");
+                Logger::alert("Job #" . self::$jobId . " died.");
+            }
+            die();
+        }        
+    }
+    
     public static function mainLoop($options)
     {
         Logger::info("Starting Ajumamoro");
@@ -108,31 +137,7 @@ class Ajumamoro
 
             if($job !== false)
             {
-                self::$jobId = $job->getId();
-                Logger::notice("Recived a new job #" . self::$jobId);
-                self::getStore()->markStarted(self::$jobId);
-                $pid = pcntl_fork();
-                if($pid)
-                {
-                    pcntl_wait($status);
-                    self::resetStore();
-                    self::getStore()->markFinished(self::$jobId);
-                }
-                else
-                {
-                    try{
-                        $job->setup();
-                        $job->go();
-                        $job->tearDown();
-                        Logger::notice("Job #" . self::$jobId . " finished.");
-                    }
-                    catch(\Exception $e)
-                    {
-                        self::logException($e, "Job #" . self::$jobId . " Exception");
-                        Logger::alert("Job #" . self::$jobId . " died.");
-                    }
-                    die();
-                }
+                self::executeJob($job);
             }
             else
             {
