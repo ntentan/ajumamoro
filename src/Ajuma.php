@@ -3,6 +3,15 @@ namespace ajumamoro;
 
 abstract class Ajuma implements \ArrayAccess
 {
+    const LOG_EMERGENCY = \ntentan\logger\Logger::EMERGENCY;
+    const LOG_ALERT     = \ntentan\logger\Logger::ALERT;
+    const LOG_CRITICAL  = \ntentan\logger\Logger::CRITICAL;
+    const LOG_ERROR     = \ntentan\logger\Logger::ERROR;
+    const LOG_WARNING   = \ntentan\logger\Logger::WARNING;
+    const LOG_NOTICE    = \ntentan\logger\Logger::NOTICE;
+    const LOG_INFO      = \ntentan\logger\Logger::INFO;
+    const LOG_DEBUG     = \ntentan\logger\Logger::DEBUG;
+    
     private $attributes;
     private $id;
     private $tag;
@@ -69,9 +78,14 @@ abstract class Ajuma implements \ArrayAccess
         $this->tag = $tag;
     }
     
-    public function getTag($tag)
+    public function getTag()
     {
         return $this->tag;
+    }
+    
+    public function log($message, $level = self::LOG_INFO)
+    {
+        \ntentan\logger\Logger::log($level, $message);
     }
 
     public function setup(){}
