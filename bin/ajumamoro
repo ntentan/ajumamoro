@@ -4,11 +4,6 @@
 require "vendor/autoload.php";
 
 use clearice\ClearIce;
-use ntentan\logger\Logger;use ajumamoro\Configuration;
-
-//set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../src' . PATH_SEPARATOR . __DIR__ . '/../src/stores');
-//spl_autoload_register('class_loader');
-
 
 error_reporting(E_ALL ^ E_NOTICE);
 $cli = new ClearIce();
@@ -101,32 +96,8 @@ catch(\Exception $e)
 
 if(count($arguments) === 0){
     echo ClearIce::getHelpMessage();
-    die();
 }
-
-// Fork and start running as a daemon
-/*if($arguments['daemon'] === true)
+else if(!isset($arguments['__command__']) && isset($arguments['stand_alones']))
 {
-    $pid = pcntl_fork();
-    if($pid == -1)
-    {
-        fputs(STDERR, "Could not start daemon.\n");
-    }
-    else if($pid)
-    {
-        return;
-    }
-    else
-    {
-        main_loop($arguments);
-    }
+    echo ClearIce::getHelpMessage();
 }
-else
-{
-    main_loop($arguments);
-}
-
-/*function class_loader($class)
-{
-    @include_once str_replace(array("ajumamoro\\", '\\'), array("", "/"), $class) . '.php';
-}*/
