@@ -5,6 +5,8 @@ require "vendor/autoload.php";
 
 use clearice\ClearIce;
 
+xdebug_start_trace("trace.out");
+
 error_reporting(E_ALL ^ E_NOTICE);
 $cli = new ClearIce();
 
@@ -94,7 +96,8 @@ catch(\Exception $e)
     die();
 }
 
-if(count($arguments) === 0){
+if(count($arguments) === 0 || $arguments['__command__'] == '')
+{
     echo ClearIce::getHelpMessage();
 }
 else if(!isset($arguments['__command__']) && isset($arguments['stand_alones']))
