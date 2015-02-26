@@ -150,4 +150,3 @@ class Ajumamoro
         while(true);        
     }
 }
-

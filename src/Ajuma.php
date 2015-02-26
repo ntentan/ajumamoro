@@ -83,6 +83,16 @@ abstract class Ajuma implements \ArrayAccess
         return $this->tag;
     }
     
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
+    
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+    
     public function log($message, $level = self::LOG_INFO)
     {
         \ntentan\logger\Logger::log($level, $message);
