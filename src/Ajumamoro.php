@@ -94,15 +94,18 @@ class Ajumamoro
         Logger::notice("Recived a new job #" . self::$jobId);
         self::getStore()->markStarted(self::$jobId);
         $pid = pcntl_fork();
+        
         if($pid)
         {
             pcntl_wait($status);
+            Logger::notice("Job #" . self::$jobId . " exited.");            
             self::resetStore();
             self::getStore()->markFinished(self::$jobId);
         }
         else
         {
             try{
+                Logger::notice("Job #" . self::$jobId . " started.");
                 $job->setup();
                 $job->go();
                 $job->tearDown();
@@ -111,7 +114,7 @@ class Ajumamoro
             catch(\Exception $e)
             {
                 self::logException($e, "Job #" . self::$jobId . " Exception");
-                Logger::alert("Job #" . self::$jobId . " died.");
+                Logger::alert("Job #" . self::$jobId . " died.");            
             }
             die();
         }        
