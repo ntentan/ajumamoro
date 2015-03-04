@@ -133,6 +133,7 @@ class Ajumamoro
         
        // Get Store;
         self::init($options);
+        $delay = Configuration::get('delay', 200);
 
         do
         {

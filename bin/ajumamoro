@@ -74,6 +74,12 @@ ClearIce::addOptions(
         'command' => 'start'
     ),
     array(
+        'short' => 'D',
+        'long' => 'delay',
+        'help' => 'waiting time in microseconds between storage server polling',
+        'command' => 'start'
+    ),
+    array(
         'short' => 'c',
         'long' => 'config',
         'help' => 'a path to the configuration file for ajumamoro',
