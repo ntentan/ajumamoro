@@ -3,13 +3,28 @@
 
 require "vendor/autoload.php";
 
-use ajumamoro\Ajumamoro;
 use clearice\ClearIce;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 error_reporting(E_ALL ^ E_NOTICE);
 $cli = new ClearIce();
+
+ClearIce::addCommands(
+    array(
+        'command' => 'start',
+        'help' => 'start ajumamoro as a daemon',
+        'class' => '\\ajumamoro\\commands\\Start'
+    ),
+    array(
+        'command' => 'stop',
+        'help' => 'stop the ajumamoro daemon',
+        'class' => '\\ajumamoro\\commands\\Stop'
+    ),
+    array(
+        'command' => 'status',
+        'help' => 'display the status of the ajumamoro daemon',
+        'class' => '\\ajumamoro\\commands\\Status'
+    )
+);
 
 ClearIce::addOptions(
     array(
@@ -17,145 +32,79 @@ ClearIce::addOptions(
         'long' => 'store',
         'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
         'has_value' => true,
-        'value' => 'STORE'
+        'value' => 'STORE',
+        'command' => 'start'
     ),
     array(
         'short' => 'l',
         'long' => 'load-class-files',
-        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.'
+        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
+        'command' => 'start'
     ),
     array(
         'short' => 'h',
         'long' => 'host',
         'help' => 'hostname of the storage backend server',
         'has_value' => true,
-        'value' => 'HOST'
+        'value' => 'HOST',
+        'command' => 'start'
     ),
     array(
         'short' => 'u',
         'long' => 'user',
         'help' => 'username to access the storage backend server',
         'has_value' => true,
-        'value' => 'USERNAME'
-    ),
-    array(
-        'short' => 'p',
-        'long' => 'password',
-        'help' => 'password of the user through which you are accessing the storag backend server',
-        'has_value' => true,
-        'value' => 'PASSWORD'
+        'value' => 'USERNAME',
+        'command' => 'start'
     ),
     array(
         'short' => 'n',
         'long' => 'name',
         'help' => 'name of the database on the server',
         'has_value' => true,
-        'value' => 'DBNAME'
+        'value' => 'DBNAME',
+        'command' => 'start'
     ),
     array(
         'short' => 'd',
         'long' => 'daemon',
         'help' => 'run the process as a daemon',
-    )/*,
+        'command' => 'start'
+    ),
     array(
-        'short' => 'x',
-        'long' => 'use-external-wroker',
-        'help' => 'start a new process for jobs'
-    )*/
+        'short' => 'D',
+        'long' => 'delay',
+        'help' => 'waiting time in microseconds between storage server polling',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 'c',
+        'long' => 'config',
+        'help' => 'a path to the configuration file for ajumamoro',
+        'value' => 'PATH',
+        'has_value' => true
+    )
 );
 
 ClearIce::addHelp();
 ClearIce::setStrict(true);
-$arguments = ClearIce::parse();
-ClearIce::setDescription(
-<<<EOT
-Ajumamoro is a tool for running background tasks in PHP apps.
-        
-Usage: {$argv[0]} [options]
-        
-EOT
-);
+ClearIce::setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
+ClearIce::setUsage("[command] [options]");
 
-if(count($arguments) === 0){
-    echo ClearIce::getHelpMessage();
+try{
+    $arguments = ClearIce::parse();
+}
+catch(\Exception $e)
+{
+    \ajumamoro\Ajumamoro::logException($e);
     die();
 }
-global $logger;
-$logger = new Logger();
 
-// Fork and start running as a daemon
-if($arguments['daemon'] === true)
+if(count($arguments) === 0 || $arguments['__command__'] == '')
 {
-    $logger->pushHandler(new StreamHandler('ajumamoro.log'));
-    $pid = pcntl_fork();
-    if($pid == -1)
-    {
-        fputs(STDERR, "Could not start daemon.\n");
-    }
-    else if($pid)
-    {
-        return;
-    }
-    else
-    {
-        main_loop($arguments);
-    }
+    echo ClearIce::getHelpMessage();
 }
-else
+else if(!isset($arguments['__command__']) && isset($arguments['stand_alones']))
 {
-    main_loop($arguments);
+    echo ClearIce::getHelpMessage();
 }
-
-function main_loop($arguments)
-{
-    global $logger;
-    $logger->addInfo("Starting daemon");
-    // Get Store;
-    try{
-        Ajumamoro::init($arguments);
-    }
-    catch(Exception $e){
-        fputs(STDERR, 'Failed to initialize ajumamoro: ' . $e->getMessage());
-    };
-    
-    do
-    {
-        try{
-            $job = Ajumamoro::getNextJob($arguments['load-class-files']);
-        }
-        catch(ajumamoro\Exception $e)
-        {
-            
-        }
-        
-        if($job !== false)
-        {
-            //"Received JOB ...\n";
-            Ajumamoro::getStore()->markStarted($job->getId());
-            $pid = pcntl_fork();
-            if($pid)
-            {
-                pcntl_wait($status);
-                Ajumamoro::resetStore();
-                Ajumamoro::getStore()->markFinished($job->getId());
-            }
-            else
-            {
-                $job->setup();
-                $job->go();
-                $job->tearDown();
-                die();
-            }
-        }
-        else
-        {
-            usleep(200);
-        }
-    }
-    while(true);
-}
-
-/*function class_loader($class)
-{
-    @include_once str_replace(array("ajumamoro\\", '\\'), array("", "/"), $class) . '.php';
-}*/

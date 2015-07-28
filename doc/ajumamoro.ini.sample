@@ -1,0 +1,6 @@
+[datastore]
+type = postgresql
+host = localhost
+username = ekow
+password = hello
+database = ajumamoro
