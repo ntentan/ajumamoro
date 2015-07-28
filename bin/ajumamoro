@@ -8,10 +8,6 @@ use clearice\ClearIce;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-//set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../src' . PATH_SEPARATOR . __DIR__ . '/../src/stores');
-//spl_autoload_register('class_loader');
-
-
 error_reporting(E_ALL ^ E_NOTICE);
 $cli = new ClearIce();
 
