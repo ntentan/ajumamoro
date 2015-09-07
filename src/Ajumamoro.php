@@ -12,14 +12,14 @@ class Ajumamoro
     private static $store = false;
     private static $params = false;
     private static $jobId;
-    
+
     public static function init($params)
     {
         self::$params = $params;
     }
-    
+
     /**
-     * 
+     *
      * @return ajumamoro\Store
      */
     public static function getStore()
@@ -31,12 +31,12 @@ class Ajumamoro
         }
         return self::$store;
     }
-    
+
     public static function resetStore()
     {
         self::$store = false;
     }
-    
+
     public static function getNextJob()
     {
         $jobInfo = self::getStore()->get();
@@ -62,9 +62,9 @@ class Ajumamoro
             return false;
         }
     }
-    
+
     /**
-     * 
+     *
      * @param \Exception $exception
      * @param string $prefix
      */
@@ -72,14 +72,14 @@ class Ajumamoro
     {
         $class = new \ReflectionClass($exception);
         Logger::error("$prefix [{$class->getName()}] {$exception->getMessage()} on line {$exception->getLine()} of {$exception->getFile()}");
-        Logger::debug("Debug trace for exception {$exception->getTraceAsString()}");        
+        Logger::debug("Debug trace for exception {$exception->getTraceAsString()}");
     }
-    
+
     public static function deleteJob($job)
     {
         self::getStore()->delete($job);
     }
-    
+
     public static function add(Ajuma $job)
     {
         $store = self::getStore();
@@ -87,50 +87,61 @@ class Ajumamoro
         $store->put(serialize($job), $jobClass->getFileName(), $job->getTag());
         return $store->lastJobId();
     }
-    
+
+    private static function runJob($job)
+    {
+      try{
+          Logger::notice("Job #" . self::$jobId . " started.");
+          $job->setup();
+          $job->go();
+          $job->tearDown();
+          Logger::notice("Job #" . self::$jobId . " finished.");
+      }
+      catch(\Exception $e)
+      {
+          self::logException($e, "Job #" . self::$jobId . " Exception");
+          Logger::alert("Job #" . self::$jobId . " died.");
+      }
+    }
+
     private static function executeJob(Ajuma $job)
     {
         self::$jobId = $job->getId();
         Logger::notice("Recived a new job #" . self::$jobId);
         self::getStore()->markStarted(self::$jobId);
+
+        if(!function_exists('pcntl_fork')) {
+            self::runJob($job);
+            Logger::notice("Job #" . self::$jobId . " exited.");
+            return;
+        }
+
         $pid = pcntl_fork();
-        
         if($pid)
         {
             pcntl_wait($status);
-            Logger::notice("Job #" . self::$jobId . " exited.");            
+            Logger::notice("Job #" . self::$jobId . " exited.");
             self::resetStore();
             self::getStore()->markFinished(self::$jobId);
         }
         else
         {
-            try{
-                Logger::notice("Job #" . self::$jobId . " started.");
-                $job->setup();
-                $job->go();
-                $job->tearDown();
-                Logger::notice("Job #" . self::$jobId . " finished.");
-            }
-            catch(\Exception $e)
-            {
-                self::logException($e, "Job #" . self::$jobId . " Exception");
-                Logger::alert("Job #" . self::$jobId . " died.");            
-            }
+            self::runJob($job);
             die();
-        }        
+        }
     }
-    
+
     public static function mainLoop($options)
     {
         Logger::info("Starting Ajumamoro");
-        
+
         set_error_handler(
             function($no, $message, $file, $line){
                 Logger::error("Job #" . self::$jobId . " Warning $message on line $line of $file");
             },
             E_WARNING
         );
-        
+
        // Get Store;
         self::init($options);
         $delay = Configuration::get('delay', 200);
@@ -148,6 +159,6 @@ class Ajumamoro
                 usleep(200);
             }
         }
-        while(true);        
+        while(true);
     }
 }
