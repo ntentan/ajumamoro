@@ -2,7 +2,8 @@
     "name" : "ekowabaka/ajumamoro",
     "require": {
         "ekowabaka/clearice" : "0.4.*",
-        "ntentan/logger" : "0.1.*"
+        "ntentan/logger" : "0.1.*",
+	"ntentan/config" : "dev-master"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}

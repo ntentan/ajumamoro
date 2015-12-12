@@ -4,6 +4,9 @@ namespace ajumamoro;
 
 abstract class Store
 {
+    private static $instance;
+    private static $parameters;
+    
     abstract public function put($job, $path, $tag);
     abstract public function get();
     abstract public function init();
@@ -13,7 +16,7 @@ abstract class Store
     abstract public function markFinished($jobId);
     abstract public function setStatus($jobId, $status);
     
-    public static function factory($params)
+    private static function factory($params)
     {
         if(!isset($params['store']) || $params['store'] == '')
         {
@@ -23,5 +26,29 @@ abstract class Store
         $storeDriver = new $storeDriverClass($params);
         $storeDriver->init();
         return $storeDriver;
+    }
+    
+    /**
+     *
+     * @return ajumamoro\Store
+     */
+    public static function getInstance()
+    {
+        if(self::$instance === false)
+        {
+            self::$instance = Store::factory(self::$parameters);
+            self::$instance->init();
+        }
+        return self::$instance;
+    }  
+    
+    public static function reset()
+    {
+        self::$instance = false;
+    }    
+    
+    public static function setParameters($parameters)
+    {
+        self::$parameters = $parameters;
     }
 }

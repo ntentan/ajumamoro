@@ -1,30 +1,32 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "58e06aaffc309f117f4acf9a452fd97c",
+    "hash": "af225405eec021733fc97e84f4845d4e",
+    "content-hash": "a27e58b185b2c7c0a041cd379e848b00",
     "packages": [
         {
             "name": "ekowabaka/clearice",
-            "version": "v0.3.2",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekowabaka/clearice.git",
-                "reference": "9d1c4c51b2ec2bde686c6342159acd95e58dcceb"
+                "reference": "d39b688cf6b289a9cf7d5a7e551d69a449ba277d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/9d1c4c51b2ec2bde686c6342159acd95e58dcceb",
-                "reference": "9d1c4c51b2ec2bde686c6342159acd95e58dcceb",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/d39b688cf6b289a9cf7d5a7e551d69a449ba277d",
+                "reference": "d39b688cf6b289a9cf7d5a7e551d69a449ba277d",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.4.0"
             },
             "require-dev": {
-                "mikey179/vfsstream": "v1.3.0"
+                "mikey179/vfsstream": "1.*",
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "autoload": {
@@ -44,20 +46,20 @@
                 }
             ],
             "description": "A tool to help in the building of CLI apps. Provides command line parsing and simple console I/O interfaces.",
-            "time": "2014-10-22 09:55:49"
+            "time": "2015-11-25 12:48:05"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.11.0",
+            "version": "1.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa"
+                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
+                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
                 "shasum": ""
             },
             "require": {
@@ -68,12 +70,16 @@
                 "psr/log-implementation": "1.0.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "aws/aws-sdk-php": "^2.4.9",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~3.7.0",
-                "raven/raven": "~0.5",
-                "ruflin/elastica": "0.90.*",
+                "jakub-onderka/php-parallel-lint": "0.9",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "raven/raven": "^0.13",
+                "ruflin/elastica": ">=0.90 <3.0",
+                "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
             "suggest": {
@@ -82,6 +88,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
@@ -90,7 +97,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.16.x-dev"
                 }
             },
             "autoload": {
@@ -116,20 +123,57 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-09-30 13:30:58"
+            "time": "2015-10-14 12:51:02"
         },
         {
-            "name": "ntentan/logger",
-            "version": "v0.1.0",
+            "name": "ntentan/config",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ntentan/logger.git",
-                "reference": "95ef8c2bdd4ff10bad1701a2d6fe42e4121b9490"
+                "url": "https://github.com/ntentan/config.git",
+                "reference": "38fa6aef1f509b7e466915e37b9e29eb0bb13366"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/logger/zipball/95ef8c2bdd4ff10bad1701a2d6fe42e4121b9490",
-                "reference": "95ef8c2bdd4ff10bad1701a2d6fe42e4121b9490",
+                "url": "https://api.github.com/repos/ntentan/config/zipball/38fa6aef1f509b7e466915e37b9e29eb0bb13366",
+                "reference": "38fa6aef1f509b7e466915e37b9e29eb0bb13366",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ntentan\\config\\": "src/",
+                    "ntentan\\config\\tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ekow Abaka Ainooson",
+                    "email": "jainooson@gmail.com"
+                }
+            ],
+            "description": "Configurations manager for ntentan",
+            "time": "2015-12-12 20:41:14"
+        },
+        {
+            "name": "ntentan/logger",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ntentan/logger.git",
+                "reference": "798b691daff9acd5738d658e616c49bcf8b4d9b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ntentan/logger/zipball/798b691daff9acd5738d658e616c49bcf8b4d9b4",
+                "reference": "798b691daff9acd5738d658e616c49bcf8b4d9b4",
                 "shasum": ""
             },
             "require": {
@@ -156,7 +200,7 @@
                 }
             ],
             "description": "A static PSR-3 logger wrapped around the super cool monolog.",
-            "time": "2014-12-18 11:33:18"
+            "time": "2014-12-21 00:24:25"
         },
         {
             "name": "psr/log",
@@ -200,8 +244,11 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ntentan/config": 20
+    },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

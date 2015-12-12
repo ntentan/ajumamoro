@@ -3,7 +3,7 @@
 namespace ajumamoro\commands;
 
 use ntentan\logger\Logger;
-use ajumamoro\Ajumamoro;
+use ajumamoro\Runner;
 use ajumamoro\Configuration;
 use clearice\ClearIce;
 
@@ -11,7 +11,7 @@ class Start implements \clearice\Command
 {
     private function checkExistingInstance()
     {
-        $pidFile = Configuration::get('pid_file', './ajumamoro.pid');
+        $pidFile = Configuration::get('pid_file', './.ajumamoro.pid');
         if(file_exists($pidFile) && is_readable($pidFile))
         {
             $oldPid = file_get_contents($pidFile);
@@ -55,7 +55,7 @@ class Start implements \clearice\Command
         }
         else
         {
-            Ajumamoro::mainLoop($options);
+            Runner::mainLoop($options);
         }    
         return $pid;
     }
@@ -81,7 +81,7 @@ class Start implements \clearice\Command
         else
         {
             Logger::init('php://output', 'ajumamoro');
-            Ajumamoro::mainLoop($options);
+            Runner::mainLoop($options);
         }        
     }
 }

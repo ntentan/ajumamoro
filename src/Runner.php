@@ -3,64 +3,17 @@ namespace ajumamoro;
 
 use ntentan\logger\Logger;
 
-class Ajumamoro
+class Runner
 {
     /**
      *
      * @var ajumamoro\Store
      */
-    private static $store = false;
-    private static $params = false;
     private static $jobId;
 
     public static function init($params)
     {
-        self::$params = $params;
-    }
-
-    /**
-     *
-     * @return ajumamoro\Store
-     */
-    public static function getStore()
-    {
-        if(self::$store === false)
-        {
-            self::$store = Store::factory(self::$params);
-            self::$store->init();
-        }
-        return self::$store;
-    }
-
-    public static function resetStore()
-    {
-        self::$store = false;
-    }
-
-    public static function getNextJob()
-    {
-        $jobInfo = self::getStore()->get();
-        if(is_array($jobInfo))
-        {
-            require_once $jobInfo['class_file_path'];
-            $job = unserialize($jobInfo['object']);
-            if(is_a($job, "\\ajumamoro\\Ajuma"))
-            {
-                $job->setStore(self::getStore());
-                $job->setId($jobInfo['id']);
-                return $job;
-            }
-            else
-            {
-                Logger::error("Failed to execute job");
-                self::getStore()->setStatus($jobInfo['id'], 'FAILED');
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
+        Store::setParameters($params);
     }
 
     /**
@@ -80,14 +33,6 @@ class Ajumamoro
         self::getStore()->delete($job);
     }
 
-    public static function add(Ajuma $job)
-    {
-        $store = self::getStore();
-        $jobClass = new \ReflectionObject($job);
-        $store->put(serialize($job), $jobClass->getFileName(), $job->getTag());
-        return $store->lastJobId();
-    }
-
     private static function runJob($job)
     {
       try{
@@ -104,7 +49,7 @@ class Ajumamoro
       }
     }
 
-    private static function executeJob(Ajuma $job)
+    private static function executeJob(Job $job)
     {
         self::$jobId = $job->getId();
         Logger::notice("Recived a new job #" . self::$jobId);
