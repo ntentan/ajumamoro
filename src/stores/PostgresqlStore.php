@@ -1,17 +1,19 @@
 <?php
 namespace ajumamoro\stores;
 
+use ntentan\config\Config;
+
 class PostgresqlStore extends PdoStore
 {    
     private $lastValStatement;
     
-    public function __construct($params)
+    public function __construct()
     {
-        $host = isset($params['host']) ? $params['host'] : 'localhost';
-        $port = isset($params['port']) ? $params['port'] : '5432';
-        $dbname = isset($params['dbname']) ? $params['dbname'] : 'ajumamoro';
-        $user = isset($params['user']) ? $params['user'] : 'postgres';
-        $password = isset($params['password']) ? $params['password'] : 'postgres';
+        $host = Config::get('store.host', 'localhost');
+        $port = Config::get('store.port', '5432');
+        $dbname = Config::get('store.dbname', 'ajumamoro');
+        $user = Config::get('store.user', 'postgres');
+        $password = Config::get('store.password');
         
         try{
             $this->db = new \PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");

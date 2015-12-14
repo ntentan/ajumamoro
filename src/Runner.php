@@ -2,6 +2,7 @@
 namespace ajumamoro;
 
 use ntentan\logger\Logger;
+use ntentan\config\Config;
 
 class Runner
 {
@@ -10,11 +11,6 @@ class Runner
      * @var ajumamoro\Store
      */
     private static $jobId;
-
-    public static function init($params)
-    {
-        Store::setParameters($params);
-    }
 
     /**
      *
@@ -76,7 +72,7 @@ class Runner
         }
     }
 
-    public static function mainLoop($options)
+    public static function mainLoop()
     {
         Logger::info("Starting Ajumamoro");
 
@@ -88,12 +84,11 @@ class Runner
         );
 
        // Get Store;
-        self::init($options);
-        $delay = Configuration::get('delay', 200);
+        $delay = Config::get('delay', 200);
 
         do
         {
-            $job = self::getNextJob();
+            $job = Scheduler::getNextJob();
 
             if($job !== false)
             {

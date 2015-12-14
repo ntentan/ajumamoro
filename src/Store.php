@@ -2,10 +2,11 @@
 
 namespace ajumamoro;
 
+use ntentan\config\Config;
+
 abstract class Store
 {
     private static $instance;
-    private static $parameters;
     
     abstract public function put($job, $path, $tag);
     abstract public function get();
@@ -16,14 +17,14 @@ abstract class Store
     abstract public function markFinished($jobId);
     abstract public function setStatus($jobId, $status);
     
-    private static function factory($params)
+    private static function factory()
     {
-        if(!isset($params['store']) || $params['store'] == '')
+        if(!Config::get('store'))
         {
             throw new Exception('Please specify a store for the jobs.');
         }
-        $storeDriverClass = '\\ajumamoro\\stores\\' . ucfirst($params['store']) . 'Store';
-        $storeDriver = new $storeDriverClass($params);
+        $storeDriverClass = '\\ajumamoro\\stores\\' . ucfirst(Config::get('store.driver')) . 'Store';
+        $storeDriver = new $storeDriverClass();
         $storeDriver->init();
         return $storeDriver;
     }
@@ -34,9 +35,9 @@ abstract class Store
      */
     public static function getInstance()
     {
-        if(self::$instance === false)
+        if(self::$instance === null)
         {
-            self::$instance = Store::factory(self::$parameters);
+            self::$instance = Store::factory();
             self::$instance->init();
         }
         return self::$instance;

@@ -14,21 +14,22 @@ class Scheduler
 
     public static function getNextJob()
     {
-        $jobInfo = self::getStore()->get();
+        $store = Store::getInstance();
+        $jobInfo = $store->get();
         if(is_array($jobInfo))
         {
             require_once $jobInfo['class_file_path'];
             $job = unserialize($jobInfo['object']);
             if(is_a($job, "\\ajumamoro\\Ajuma"))
             {
-                $job->setStore(self::getStore());
+                $job->setStore($store);
                 $job->setId($jobInfo['id']);
                 return $job;
             }
             else
             {
                 Logger::error("Failed to execute job");
-                self::getStore()->setStatus($jobInfo['id'], 'FAILED');
+                $store->setStatus($jobInfo['id'], 'FAILED');
                 return false;
             }
         }
