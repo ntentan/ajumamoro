@@ -2,8 +2,6 @@
 
 namespace ajumamoro;
 
-use ntentan\config\Config;
-
 abstract class Store
 {
     private static $instance;

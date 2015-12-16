@@ -2,7 +2,6 @@
 namespace ajumamoro;
 
 use ntentan\logger\Logger;
-use ntentan\config\Config;
 
 class Runner
 {
