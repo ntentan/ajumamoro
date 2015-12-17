@@ -1,7 +1,7 @@
 <?php
 namespace ajumamoro\stores;
 
-use ntentan\config\Config;
+use ajumamoro\Config;
 
 class PostgresqlStore extends PdoStore
 {    
@@ -19,8 +19,7 @@ class PostgresqlStore extends PdoStore
             $this->db = new \PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
         }
         catch(\PDOException $e){
-            fputs(STDERR, "Failed to connect to database: {$e->getMessage()}.\n");
-            die();
+            throw new \ajumamoro\Exception("Failed to connect to database: {$e->getMessage()}.");
         }
     }
 

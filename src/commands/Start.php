@@ -4,7 +4,7 @@ namespace ajumamoro\commands;
 
 use ntentan\logger\Logger;
 use ajumamoro\Runner;
-use ntentan\config\Config;
+use ajumamoro\Config;
 use clearice\ClearIce;
 
 class Start implements \clearice\Command

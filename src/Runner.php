@@ -25,7 +25,7 @@ class Runner
 
     public static function deleteJob($job)
     {
-        self::getStore()->delete($job);
+        Store::getInstance()->delete($job);
     }
 
     private static function runJob($job)
@@ -48,7 +48,7 @@ class Runner
     {
         self::$jobId = $job->getId();
         Logger::notice("Recived a new job #" . self::$jobId);
-        self::getStore()->markStarted(self::$jobId);
+        Store::getInstance()->markStarted(self::$jobId);
 
         if(!function_exists('pcntl_fork')) {
             self::runJob($job);
@@ -61,8 +61,8 @@ class Runner
         {
             pcntl_wait($status);
             Logger::notice("Job #" . self::$jobId . " exited.");
-            self::resetStore();
-            self::getStore()->markFinished(self::$jobId);
+            Store::getInstance()->markFinished(self::$jobId);
+            Store::reset();
         }
         else
         {

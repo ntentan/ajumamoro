@@ -17,7 +17,7 @@ abstract class Store
     
     private static function factory()
     {
-        if(!Config::get('store'))
+        if(!Config::get('store') || !Config::get('store.driver'))
         {
             throw new Exception('Please specify a store for the jobs.');
         }
@@ -43,7 +43,7 @@ abstract class Store
     
     public static function reset()
     {
-        self::$instance = false;
+        self::$instance = null;
     }    
     
     public static function setParameters($parameters)
