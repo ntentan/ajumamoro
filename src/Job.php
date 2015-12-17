@@ -15,7 +15,20 @@ abstract class Job
     private $attributes;
     private $id;
     private $tag;
+    private $unique;
+    private $context;
+    private $indicators;
     protected $store;
+    
+    public function getIndicator($indicator)
+    {
+        return $this->indicators[$indicator];
+    }
+    
+    public function setIndicator($indicator, $value)
+    {
+        $this->indicators[$indicator] = $value;
+    }
     
     public function __set($name, $value)
     {
@@ -71,6 +84,16 @@ abstract class Job
     public function getAttributes()
     {
         return $this->attributes;
+    }
+    
+    public function setUnique($unique)
+    {
+        $this->unique = $unique;
+    }
+    
+    public function setContext($context)
+    {
+        $this->context = $context;
     }
     
     public function log($message, $level = self::LOG_INFO)

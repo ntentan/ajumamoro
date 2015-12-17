@@ -36,6 +36,9 @@ class PostgresqlStore extends PdoStore
               finished timestamp with time zone,
               started timestamp with time zone,
               tag character varying,
+              unique boolean,
+              context character varying,
+              inidicators text
               CONSTRAINT jobs_pkey PRIMARY KEY (id)
             )"
         );
