@@ -6,14 +6,16 @@ abstract class Store
 {
     private static $instance;
     
-    abstract public function put($job, $path, $tag);
-    abstract public function get();
+    abstract public function put($job, $path);
+    abstract public function getNext();
+    abstract public function get($jobId);
     abstract public function init();
     abstract public function lastJobId();
     abstract public function delete($jobId);
     abstract public function markStarted($jobId);
     abstract public function markFinished($jobId);
     abstract public function setStatus($jobId, $status);
+    abstract public function getStatus($query);
     
     private static function factory()
     {

@@ -10,18 +10,25 @@ class Scheduler
     {
         $store = Store::getInstance();
         $jobClass = new \ReflectionObject($job);
-        $store->put(serialize($job), $jobClass->getFileName(), $job->getTag());
+        $store->put($job, $jobClass->getFileName());
         return $store->lastJobId();
     }
     
-    public function __construct($parameters)
+    public static function connect($parameters)
     {
         Config::set('store', $parameters);
+        return new Scheduler();
     }
     
-    public function fetchJob($query)
+    public function getJobStatus($query)
     {
-        
+        return Store::getInstance()->getStatus($query);
     }
-   
+    
+    public function getJob($id)
+    {
+        $store = Store::getInstance();
+        return $store->get($id);
+    }
+    
 }

@@ -104,7 +104,7 @@ class Runner
     public static function getNextJob()
     {
         $store = Store::getInstance();
-        $jobInfo = $store->get();
+        $jobInfo = $store->getNext();
         if(is_array($jobInfo))
         {
             require_once $jobInfo['class_file_path'];

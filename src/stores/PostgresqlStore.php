@@ -17,15 +17,22 @@ class PostgresqlStore extends PdoStore
         
         try{
             $this->db = new \PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
+            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
         catch(\PDOException $e){
             throw new \ajumamoro\Exception("Failed to connect to database: {$e->getMessage()}.");
         }
     }
-
-    public function init() 
+    
+    public function lastJobId() 
     {
-        parent::init(); 
+        $this->lastValStatement->execute();
+        $lastId = $this->lastValStatement->fetch();
+        return $lastId['last'];
+    }
+
+    public function createTables()
+    {
         $this->db->query("CREATE TABLE IF NOT EXISTS jobs
             (
               id serial NOT NULL,
@@ -36,19 +43,12 @@ class PostgresqlStore extends PdoStore
               finished timestamp with time zone,
               started timestamp with time zone,
               tag character varying,
-              unique boolean,
+              exclusive boolean,
               context character varying,
-              inidicators text
               CONSTRAINT jobs_pkey PRIMARY KEY (id)
             )"
         );
-        $this->lastValStatement = $this->db->prepare("SELECT LASTVAL() as last");
+        $this->lastValStatement = $this->db->prepare("SELECT LASTVAL() as last");        
     }
-    
-    public function lastJobId() 
-    {
-        $this->lastValStatement->execute();
-        $lastId = $this->lastValStatement->fetch();
-        return $lastId['last'];
-    }
+
 }
