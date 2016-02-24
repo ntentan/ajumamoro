@@ -103,27 +103,15 @@ class Runner
     
     public static function getNextJob()
     {
-        $store = Store::getInstance();
-        $jobInfo = $store->getNext();
-        if(is_array($jobInfo))
+        $broker = Broker::getInstance();
+        $job = $broker->get();
+        if(is_object($job) && is_a($job, '\ajumamoro\Job'))
         {
-            require_once $jobInfo['class_file_path'];
-            $job = unserialize($jobInfo['object']);
-            if(is_a($job, "\\ajumamoro\\Job"))
-            {
-                $job->setStore($store);
-                $job->setId($jobInfo['id']);
-                return $job;
-            }
-            else
-            {
-                Logger::error("Scheduled job is not of type \\ajumamoro\\Job.");
-                $store->setStatus($jobInfo['id'], 'FAILED');
-                return false;
-            }
+            return $job;
         }
         else
         {
+            Logger::error("Scheduled job is not of type \\ajumamoro\\Job.");
             return false;
         }
     }     
