@@ -48,7 +48,7 @@ class Runner
     {
         self::$jobId = $job->getId();
         Logger::notice("Recived a new job #" . self::$jobId);
-        Store::getInstance()->markStarted(self::$jobId);
+        //Store::getInstance()->markStarted(self::$jobId);
 
         if(!function_exists('pcntl_fork')) {
             self::runJob($job);
@@ -61,8 +61,8 @@ class Runner
         {
             pcntl_wait($status);
             Logger::notice("Job #" . self::$jobId . " exited.");
-            Store::getInstance()->markFinished(self::$jobId);
-            Store::reset();
+            //Store::getInstance()->markFinished(self::$jobId);
+            //Store::reset();
         }
         else
         {
@@ -104,9 +104,14 @@ class Runner
     public static function getNextJob()
     {
         $broker = Broker::getInstance();
-        $job = $broker->get();
+        $jobInfo = $broker->get();
+        
+        if(file_exists($jobInfo['path'])) require_once $jobInfo['path'];
+        
+        $job = unserialize($jobInfo['object']);
         if(is_object($job) && is_a($job, '\ajumamoro\Job'))
         {
+            $job->setId($jobInfo['id']);
             return $job;
         }
         else

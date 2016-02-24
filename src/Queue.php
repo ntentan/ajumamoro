@@ -9,7 +9,10 @@ class Queue
     public function add(Job $job)
     {
         $store = Broker::getInstance();
-        return $store->put($job);
+        $jobClass = new \ReflectionClass($job);
+        $path = $jobClass->getFileName();
+        $object = serialize($job);
+        return $store->put(['path' => $path, 'object' => $object]);
     }
     
     public static function connectBroker($parameters)
@@ -22,11 +25,4 @@ class Queue
     {
         return Broker::getInstance()->getStatus($query);
     }
-    
-    public function getJob($id)
-    {
-        $store = Store::getInstance();
-        return $store->get($id);
-    }
-    
 }

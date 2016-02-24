@@ -20,9 +20,11 @@ class RedisBroker extends Broker
     public function get()
     {
         do{
-            $job = $this->redis->rpop("jobs");
-        }while($job === null);
-        return unserialize($job);
+            $response = $this->redis->rpop("jobs");
+            usleep(500);
+        } 
+        while ($response === null);
+        return unserialize($response);
     }
 
     public function init()
@@ -34,8 +36,9 @@ class RedisBroker extends Broker
 
     public function put($job)
     {
+        $job['id'] = $this->redis->incr("job_id");
         $this->redis->lpush("jobs", serialize($job));
-        return $this->redis->incr("job_id");
+        return $job['id'];
     }
 
 }
