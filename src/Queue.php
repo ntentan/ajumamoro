@@ -11,8 +11,9 @@ class Queue
         $store = Broker::getInstance();
         $jobClass = new \ReflectionClass($job);
         $path = $jobClass->getFileName();
+        $name = $jobClass->getName();
         $object = serialize($job);
-        return $store->put(['path' => $path, 'object' => $object]);
+        return $store->put(['path' => $path, 'object' => $object, 'class' => $name]);
     }
     
     public static function connectBroker($parameters)
