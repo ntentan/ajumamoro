@@ -73,8 +73,14 @@ class Runner
 
     public static function mainLoop()
     {
+        $bootstrap = Config::get('bootstrap');        
+        if($bootstrap)
+        {
+            require Config::get("bootstrap");
+        }
+        
         Logger::info("Starting Ajumamoro");
-
+        
         set_error_handler(
             function($no, $message, $file, $line){
                 Logger::error("Job #" . self::$jobId . " Warning $message on line $line of $file");
@@ -95,7 +101,7 @@ class Runner
             }
             else
             {
-                usleep(200);
+                usleep($delay);
             }
         }
         while(true);
@@ -108,7 +114,14 @@ class Runner
         
         if(file_exists($jobInfo['path'])) require_once $jobInfo['path'];
         
+        if(!class_exists($jobInfo['class']))
+        {
+            Logger::error("Class {$jobInfo['class']} for scheduled job not found");
+            return false;
+        }
+       
         $job = unserialize($jobInfo['object']);
+        
         if(is_object($job) && is_a($job, '\ajumamoro\Job'))
         {
             $job->setId($jobInfo['id']);

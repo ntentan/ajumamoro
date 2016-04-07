@@ -6,7 +6,6 @@ require "vendor/autoload.php";
 use clearice\ClearIce;
 
 error_reporting(E_ALL ^ E_NOTICE);
-$cli = new ClearIce();
 
 ClearIce::addCommands(
     array(
@@ -28,41 +27,25 @@ ClearIce::addCommands(
 
 ClearIce::addOptions(
     array(
-        'short' => 's',
-        'long' => 'store',
+        'short' => 'b',
+        'long' => 'broker',
         'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
         'has_value' => true,
         'value' => 'STORE',
         'command' => 'start'
     ),
     array(
+        'short' => 's',
+        'long' => 'bootstrap',
+        'help' => 'path to a script to include when ajumamoro starts',
+        'has_value' => true,
+        'value' => 'PATH',
+        'command' => 'start' 
+    ),
+    array(
         'short' => 'l',
         'long' => 'load-class-files',
         'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'h',
-        'long' => 'host',
-        'help' => 'hostname of the storage backend server',
-        'has_value' => true,
-        'value' => 'HOST',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'u',
-        'long' => 'user',
-        'help' => 'username to access the storage backend server',
-        'has_value' => true,
-        'value' => 'USERNAME',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'n',
-        'long' => 'name',
-        'help' => 'name of the database on the server',
-        'has_value' => true,
-        'value' => 'DBNAME',
         'command' => 'start'
     ),
     array(
@@ -74,7 +57,7 @@ ClearIce::addOptions(
     array(
         'short' => 'D',
         'long' => 'delay',
-        'help' => 'waiting time in microseconds between storage server polling',
+        'help' => 'waiting time in microseconds between broker polling',
         'command' => 'start'
     ),
     array(
