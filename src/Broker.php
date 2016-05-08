@@ -2,6 +2,8 @@
 
 namespace ajumamoro;
 
+use ntentan\config\Config;
+
 abstract class Broker
 {
     private static $instance;
@@ -12,11 +14,11 @@ abstract class Broker
     
     private static function factory()
     {
-        if(!Config::get('broker') || !Config::get('broker.driver'))
+        if(!Config::get('ajumamoro:broker') || !Config::get('ajumamoro:broker.driver'))
         {
             throw new Exception('Please specify a broker for the jobs.');
         }
-        $storeDriverClass = '\ajumamoro\brokers\\' . ucfirst(Config::get('broker.driver')) . 'Broker';
+        $storeDriverClass = '\ajumamoro\brokers\\' . ucfirst(Config::get('ajumamoro:broker.driver')) . 'Broker';
         $storeDriver = new $storeDriverClass();
         $storeDriver->init();
         return $storeDriver;

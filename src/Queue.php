@@ -2,7 +2,7 @@
 
 namespace ajumamoro;
 
-use ajumamoro\Config;
+use ntentan\config\Config;
 
 class Queue
 {
@@ -18,7 +18,7 @@ class Queue
     
     public static function connectBroker($parameters)
     {
-        Config::set('broker', $parameters);
+        Config::set('ajumamro:broker', $parameters);
         return new Queue();
     }
     

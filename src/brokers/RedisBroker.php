@@ -3,6 +3,7 @@
 namespace ajumamoro\brokers;
 
 use ajumamoro\Broker;
+use ntentan\config\Config;
 
 /**
  * Description of RedisBroker
@@ -29,7 +30,7 @@ class RedisBroker extends Broker
 
     public function init()
     {
-        $settings = \ajumamoro\Config::get('broker');
+        $settings = Config::get('ajumamoro:broker');
         unset($settings['driver']);
         $this->redis = new \Predis\Client($settings);
     }
