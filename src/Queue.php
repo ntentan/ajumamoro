@@ -18,7 +18,7 @@ class Queue
     
     public static function connectBroker($parameters)
     {
-        Config::set('ajumamro:broker', $parameters);
+        Config::set('ajumamoro:broker', $parameters);
         return new Queue();
     }
     
