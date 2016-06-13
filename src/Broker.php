@@ -3,6 +3,7 @@
 namespace ajumamoro;
 
 use ntentan\config\Config;
+use ntentan\logger\Logger;
 
 abstract class Broker
 {
@@ -30,11 +31,19 @@ abstract class Broker
      */
     public static function getInstance()
     {
-        if(self::$instance === null)
+        $delay = 30;
+        while(self::$instance === null)
         {
-            self::$instance = Broker::factory();
-            self::$instance->init();
+            try{
+                self::$instance = self::factory();
+                self::$instance->init();                
+            } catch (exceptions\BrokerConnectionException $e) {
+                Logger::alert("{$e->getMessage()}. Retrying in $delay seconds.");
+                sleep($delay);
+                $delay *= 2;
+            }
         }
+        Logger::info("Succesfully connected to broker");
         return self::$instance;
     }  
     

@@ -4,6 +4,7 @@ namespace ajumamoro\brokers;
 
 use ajumamoro\Broker;
 use ntentan\config\Config;
+use ajumamoro\exceptions\BrokerConnectionException;
 
 /**
  * Description of RedisBroker
@@ -33,6 +34,11 @@ class RedisBroker extends Broker
         $settings = Config::get('ajumamoro:broker');
         unset($settings['driver']);
         $this->redis = new \Predis\Client($settings);
+        try{
+            $this->redis->connect();            
+        } catch (\Predis\CommunicationException $ex) {
+            throw new BrokerConnectionException("Failed to connect to redis broker: {$ex->getMessage()}");
+        }
     }
 
     public function put($job)

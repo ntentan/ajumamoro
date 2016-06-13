@@ -74,10 +74,10 @@ class Runner
 
     public static function mainLoop()
     {
-        $bootstrap = Config::get('bootstrap');        
+        $bootstrap = Config::get('ajumamoro:bootstrap');        
         if($bootstrap)
         {
-            require Config::get("bootstrap");
+            require Config::get("ajumamoro:bootstrap");
         }
         
         Logger::info("Starting Ajumamoro");
@@ -89,7 +89,7 @@ class Runner
             E_WARNING
         );
 
-       // Get Store;
+        // Get Store;
         $delay = Config::get('delay', 200);
 
         do
