@@ -2,16 +2,14 @@
 
 namespace ajumamoro\commands;
 
-use ntentan\logger\Logger;
 use ajumamoro\Runner;
 use ntentan\config\Config;
 use clearice\ClearIce;
 
-class Start implements \clearice\Command
+class Start implements \clearice\CommandInterface
 {
 
-    private function checkExistingInstance()
-    {
+    private function checkExistingInstance() {
         $pidFile = Config::get('ajumamoro:pid_file', './.ajumamoro.pid');
         if (file_exists($pidFile) && is_readable($pidFile)) {
             $oldPid = file_get_contents($pidFile);
@@ -31,8 +29,7 @@ class Start implements \clearice\Command
         }
     }
 
-    private function startDaemon($options)
-    {
+    private function startDaemon($options) {
         $pid = pcntl_fork();
         if ($pid == -1) {
             Logger::error("Sorry! could not start daemon.\n");
@@ -46,9 +43,8 @@ class Start implements \clearice\Command
         return $pid;
     }
 
-    public function run($options)
-    {
-        if(isset($options['config'])) {
+    public function run($options) {
+        if (isset($options['config'])) {
             Config::readPath($options['config'], 'ajumamoro');
         }
         if ($options['daemon'] === true) {

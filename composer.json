@@ -2,8 +2,9 @@
     "name" : "ekowabaka/ajumamoro",
     "require": {
         "ekowabaka/clearice" : "1.*",
-	    "ntentan/config" : "dev-master",
-        "predis/predis": "^1.0"
+        "ntentan/config" : "dev-master",
+        "predis/predis": "@stable",
+        "monolog/monolog": "@stable"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}
