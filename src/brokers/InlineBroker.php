@@ -1,26 +1,25 @@
 <?php
+
 namespace ajumamoro\brokers;
 
-use ajumamoro\Broker;
-use ntentan\config\Config;
+use ajumamoro\BrokerInteface;
 
-class InlineBroker extends Broker
+class InlineBroker implements BrokerInteface
 {
-    public function get()
-    {
+
+    public function get() {
         
     }
 
-    public function init()
-    {
+    public function init() {
         
     }
 
-    public function put($job)
-    {
+    public function put($job) {
         $job = unserialize($job['object']);
         $job->setup();
         $job->go();
         $job->tearDown();
     }
+
 }

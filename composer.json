@@ -3,6 +3,7 @@
     "require": {
         "ekowabaka/clearice" : "1.*",
         "ntentan/config" : "dev-master",
+        "ntentan/utils" : "dev-master",
         "predis/predis": "@stable",
         "monolog/monolog": "@stable"
     },

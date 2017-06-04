@@ -4,69 +4,21 @@
 require "vendor/autoload.php";
 
 use clearice\ClearIce;
+use ntentan\panie\Container;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
-error_reporting(E_ALL ^ E_NOTICE);
+$container = new Container();
+$container->bind(Psr\Log\LoggerInterface::class)->to(function($container){
+    $logger = new Monolog\Logger("ajumamoro");
+    $logger->pushHandler(new StreamHandler(STDOUT, Logger::INFO));
+    return $logger;
+})->asSingleton();
 
+ClearIce::setContainer($container);
 ClearIce::addCommands(
-    array(
-        'command' => 'start',
-        'help' => 'start ajumamoro as a daemon',
-        'class' => '\\ajumamoro\\commands\\Start'
-    ),
-    array(
-        'command' => 'stop',
-        'help' => 'stop the ajumamoro daemon',
-        'class' => '\\ajumamoro\\commands\\Stop'
-    ),
-    array(
-        'command' => 'status',
-        'help' => 'display the status of the ajumamoro daemon',
-        'class' => '\\ajumamoro\\commands\\Status'
-    )
-);
-
-ClearIce::addOptions(
-    array(
-        'short' => 'b',
-        'long' => 'broker',
-        'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
-        'has_value' => true,
-        'value' => 'STORE',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 's',
-        'long' => 'bootstrap',
-        'help' => 'path to a script to include when ajumamoro starts',
-        'has_value' => true,
-        'value' => 'PATH',
-        'command' => 'start' 
-    ),
-    array(
-        'short' => 'l',
-        'long' => 'load-class-files',
-        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'd',
-        'long' => 'daemon',
-        'help' => 'run the process as a daemon',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'D',
-        'long' => 'delay',
-        'help' => 'waiting time in microseconds between broker polling',
-        'command' => 'start'
-    ),
-    array(
-        'short' => 'c',
-        'long' => 'config',
-        'help' => 'a path to the configuration file for ajumamoro',
-        'value' => 'PATH',
-        'has_value' => true
-    )
+    ajumamoro\commands\Start::class,
+    ajumamoro\commands\Stop::class
 );
 
 ClearIce::addHelp();
@@ -74,14 +26,14 @@ ClearIce::setStrict(true);
 ClearIce::setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
 ClearIce::setUsage("[command] [options]");
 
-try{
+//try{
     $arguments = ClearIce::parse();
-}
+/*}
 catch(\Exception $e)
 {
-    \ajumamoro\Runner::logException($e);
+    fputs(STDERR, "ajumamor failed to start: {$e->getMessage()}\n");
     die();
-}
+}*/
 
 if(count($arguments) === 0 || $arguments['__command__'] == '')
 {
