@@ -13,7 +13,7 @@ class Runner
      *
      * @var ajumamoro\Store
      */
-    private $jobId;
+    private $currentJobId;
     private $logger;
     private $config;
     private $broker;
@@ -41,36 +41,32 @@ class Runner
 
     private function runJob($job) {
         try {
-            $this->logger->notice("Job #" . self::$jobId . " started.");
+            $this->logger->notice("Job #{$this->currentJobId} [{$job->getName()}] started.");
             $job->setup();
             $job->go();
             $job->tearDown();
-            $this->logger->notice("Job #" . self::$jobId . " finished.");
+            $this->logger->notice("Job #{$this->currentJobId} [{$job->getName()}] finished.");
         } catch (\Exception $e) {
-            self::logException($e, "Job #" . self::$jobId . " Exception");
-            $this->logger->alert("Job #" . self::$jobId . " died.");
+            $this->logException($e, "Job #{$this->currentJobId}  [{$job->getName()}] Exception");
+            $this->logger->alert("Job #{$this->currentJobId}  [{$job->getName()}] died.");
         }
     }
 
     private function executeJob(Job $job) {
-        self::$jobId = $job->getId();
-        $this->logger->notice("Recived a new job #" . self::$jobId);
-        //Store::getInstance()->markStarted(self::$jobId);
+        $this->currentJobId = $job->getId();
+        $job->setLogger($this->logger);
+        $this->logger->notice("Starting job #" . $this->currentJobId);
 
         if (!function_exists('pcntl_fork')) {
-            self::runJob($job);
-            $this->logger->notice("Job #" . self::$jobId . " exited.");
+            $this->runJob($job);
             return;
         }
 
         $pid = pcntl_fork();
         if ($pid) {
             pcntl_wait($status);
-            $this->logger->notice("Job #" . self::$jobId . " exited.");
-            //Store::getInstance()->markFinished(self::$jobId);
-            //Store::reset();
         } else {
-            self::runJob($job);
+            $this->runJob($job);
             die();
         }
     }
@@ -80,23 +76,24 @@ class Runner
         if ($bootstrap) {
             require $this->config->get('bootstrap');
         }
-
-        $this->logger->info("Starting Ajumamoro");
-
+        $this->logger->info("Ajumamoro");
         set_error_handler(
-                function($no, $message, $file, $line) {
-            $this->logger->error("Job #" . self::$jobId . " Warning $message on line $line of $file");
-        }, E_WARNING
+            function($no, $message, $file, $line) {
+                $this->logger->error(
+                    "Job #{$this->currentJobId} Error: $message on line $line of $file"
+                );
+            }, 
+            E_WARNING
         );
 
         // Get Store;
         $delay = $this->config->get('delay', 200);
 
         do {
-            $job = self::getNextJob();
+            $job = $this->getNextJob();
 
             if ($job !== false) {
-                self::executeJob($job);
+                $this->executeJob($job);
             } else {
                 usleep($delay);
             }

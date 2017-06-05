@@ -7,14 +7,17 @@ use clearice\ClearIce;
 use ntentan\panie\Container;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
 
+// Setup DI bindings
 $container = new Container();
-$container->bind(Psr\Log\LoggerInterface::class)->to(function($container){
+$container->bind(LoggerInterface::class)->to(function($container){
     $logger = new Monolog\Logger("ajumamoro");
     $logger->pushHandler(new StreamHandler(STDOUT, Logger::INFO));
     return $logger;
 })->asSingleton();
 
+// Setup clearice
 ClearIce::setContainer($container);
 ClearIce::addCommands(
     ajumamoro\commands\Start::class,
@@ -26,14 +29,14 @@ ClearIce::setStrict(true);
 ClearIce::setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
 ClearIce::setUsage("[command] [options]");
 
-//try{
+try{
     $arguments = ClearIce::parse();
-/*}
+}
 catch(\Exception $e)
 {
     fputs(STDERR, "ajumamor failed to start: {$e->getMessage()}\n");
     die();
-}*/
+}
 
 if(count($arguments) === 0 || $arguments['__command__'] == '')
 {

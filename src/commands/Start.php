@@ -118,7 +118,14 @@ class Start implements \clearice\CommandInterface
             "\\ajumamoro\\brokers\\%sBroker", 
             Text::ucamelize($options['broker'])
         );
-        $this->container->bind(BrokerInterface::class)->to($brokerClass);
+        $this->container->bind(BrokerInterface::class)->to(
+            function($container) use ($brokerClass, $options) {
+                $broker = $container->resolve(
+                    $brokerClass, 
+                    ['config' => $this->config->get($options['broker'])]
+                );
+                return $broker;
+            });
         $this->runner = $this->container->resolve(Runner::class);
         
         if (isset($options['daemon'])) {

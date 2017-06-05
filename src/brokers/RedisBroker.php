@@ -3,7 +3,6 @@
 namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
-use ntentan\config\Config;
 use ajumamoro\exceptions\BrokerConnectionException;
 
 /**
@@ -15,11 +14,15 @@ class RedisBroker implements BrokerInterface
 {
 
     /**
-     *
+     * Instance of the redis client
      * @var \Predis\Client
      */
     private $redis;
 
+    /**
+     * 
+     * @return Job
+     */
     public function get() {
         do {
             $response = $this->redis->rpop("jobs");
@@ -28,14 +31,14 @@ class RedisBroker implements BrokerInterface
         return unserialize($response);
     }
 
-    public function __construct(Config $config) {
-        $settings = $config->get('redis');
-        unset($settings['driver']);
-        $this->redis = new \Predis\Client($settings);
+    public function __construct($config) {
+        $this->redis = new \Predis\Client($config);
         try {
             $this->redis->connect();
         } catch (\Predis\CommunicationException $ex) {
-            throw new BrokerConnectionException("Failed to connect to redis broker: {$ex->getMessage()}");
+            throw new BrokerConnectionException(
+                "Failed to connect to redis broker: {$ex->getMessage()}"
+            );
         }
     }
 

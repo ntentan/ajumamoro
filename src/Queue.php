@@ -2,28 +2,45 @@
 
 namespace ajumamoro;
 
-use ntentan\config\Config;
+use ntentan\panie\Container;
+use ntentan\utils\Text;
 
 class Queue
 {
-    public function add(Job $job)
-    {
-        $store = Broker::getInstance();
+    private $broker;
+    
+    public function __construct(BrokerInterface $broker) {
+        $this->broker = $broker;
+    }
+    
+    public function add(Job $job) {
         $jobClass = new \ReflectionClass($job);
         $path = $jobClass->getFileName();
         $name = $jobClass->getName();
         $object = serialize($job);
-        return $store->put(['path' => $path, 'object' => $object, 'class' => $name]);
+        return $this->broker->put([
+            'path' => $path, 'object' => $object, 'class' => $name
+        ]);
     }
-    
-    public static function connectBroker($parameters)
-    {
-        Config::set('ajumamoro:broker', $parameters);
-        return new Queue();
+
+    public static function setup(Container $container, $config) {
+        $container->bind(BrokerInterface::class)->to(
+            function($container) use ($config) {
+                $brokerClass = sprintf(
+                    "\\ajumamoro\\brokers\\%sBroker", 
+                    Text::ucamelize($config['broker'])
+                );
+                $broker = $container->resolve(
+                    $brokerClass, 
+                    ['config' => $config[$config['broker']]]
+                );
+                return $broker;
+            }
+        );        
     }
-    
-    public function getJobStatus($query)
-    {
+
+    public function getJobStatus($query) {
         return Broker::getInstance()->getStatus($query);
     }
+
 }
