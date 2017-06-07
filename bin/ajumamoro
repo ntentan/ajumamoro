@@ -16,6 +16,10 @@ $container->bind(LoggerInterface::class)->to(function($container){
     $logger->pushHandler(new StreamHandler(STDOUT, Logger::INFO));
     return $logger;
 })->asSingleton();
+$container
+    ->bind(\ntentan\config\Config::class)
+    ->to(\ntentan\config\Config::class)
+    ->asSingleton();
 
 // Setup clearice
 ClearIce::setContainer($container);
