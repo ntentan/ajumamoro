@@ -73,7 +73,6 @@ class Runner
 
     public function mainLoop() {
         $bootstrap = $this->config->get('broker');
-        var_dump($bootstrap);
         if ($bootstrap) {
             require $this->config->get('bootstrap');
         }
