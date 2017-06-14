@@ -9,8 +9,8 @@ abstract class Job
 
     private $attributes;
     private $id;
-    protected $broker;
-    protected $logger;
+    private $logger;
+    private $container;
 
     protected function getAttribute($key) {
         return $this->attributes[$key];
@@ -34,6 +34,18 @@ abstract class Job
     
     public function setLogger(LoggerInterface $logger) {
         $this->logger = $logger;
+    }
+    
+    protected function getLogger() {
+        return $this->logger;
+    }
+    
+    public function setContainer($container) {
+        $this->container = $container;
+    }
+    
+    protected function getContainer() {
+        return $this->container;
     }
 
     public function setup() {

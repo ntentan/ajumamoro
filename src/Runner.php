@@ -5,6 +5,7 @@ namespace ajumamoro;
 use Psr\Log\LoggerInterface;
 use ntentan\config\Config;
 use ajumamoro\BrokerInterface;
+use ntentan\panie\Container;
 
 class Runner
 {
@@ -17,11 +18,13 @@ class Runner
     private $logger;
     private $config;
     private $broker;
+    private $container;
     
-    public function __construct(LoggerInterface $logger, BrokerInterface $broker, Config $config) {
+    public function __construct(Container $container, LoggerInterface $logger, BrokerInterface $broker, Config $config) {
         $this->logger = $logger;
         $this->broker = $broker;
         $this->config = $config;
+        $this->container = $container;
     }
 
     /**
@@ -55,6 +58,7 @@ class Runner
     private function executeJob(Job $job) {
         $this->currentJobId = $job->getId();
         $job->setLogger($this->logger);
+        $job->setContainer($this->container);
         $this->logger->notice("Starting job #" . $this->currentJobId);
 
         if (!function_exists('pcntl_fork')) {
@@ -74,7 +78,10 @@ class Runner
     public function mainLoop() {
         $bootstrap = $this->config->get('broker');
         if ($bootstrap) {
-            require $this->config->get('bootstrap');
+            $container = $this->container;
+            (function() use ($container) {
+                require $this->config->get('bootstrap');
+            })();
         }
         $this->logger->info("Ajumamoro");
         set_error_handler(
