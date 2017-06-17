@@ -15,12 +15,15 @@ class Queue
     
     public function add(Job $job) {
         $jobClass = new \ReflectionClass($job);
-        $path = $jobClass->getFileName();
         $name = $jobClass->getName();
         $object = serialize($job);
-        return $this->broker->put([
-            'path' => $path, 'object' => $object, 'class' => $name
+        $jobId = $this->broker->put([
+            'object' => $object, 'class' => $name
         ]);
+        $this->broker->setStatus($jobId,
+            ['status' => Job::STATUS_QUEUED, 'queued'=> date(DATE_RFC3339_EXTENDED)]
+        );
+        return $jobId;
     }
 
     public static function setup(Container $container, $config) {
@@ -39,8 +42,8 @@ class Queue
         );        
     }
 
-    public function getJobStatus($query) {
-        return Broker::getInstance()->getStatus($query);
+    public function getJobStatus($jobId) {
+        return $this->broker->getStatus($jobId);
     }
 
 }

@@ -25,7 +25,7 @@ class RedisBroker implements BrokerInterface
      */
     public function get() {
         do {
-            $response = $this->redis->rpop("jobs");
+            $response = $this->redis->rpop("job_queue");
             usleep(500);
         } while ($response === null);
         return unserialize($response);
@@ -43,9 +43,22 @@ class RedisBroker implements BrokerInterface
     }
 
     public function put($job) {
-        $job['id'] = $this->redis->incr("job_id");
-        $this->redis->lpush("jobs", serialize($job));
+        $job['id'] = $this->redis->incr("job_id_sequence");
+        $this->redis->lpush("job_queue", serialize($job));
         return $job['id'];
+    }
+
+    /**
+     * 
+     * @param \ajumamoro\Job $job
+     * @return string
+     */
+    public function getStatus($jobId) {
+        return json_decode($this->redis->get("job_status:$jobId"), true);
+    }
+
+    public function setStatus($jobId, $status) {
+        return $this->redis->set("job_status:$jobId", json_encode($status));
     }
 
 }

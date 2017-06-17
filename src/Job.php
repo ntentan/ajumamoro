@@ -7,6 +7,11 @@ use Psr\Log\LoggerInterface;
 abstract class Job
 {
 
+    const STATUS_QUEUED = 'queued';
+    const STATUS_RUNNING = 'running';
+    const STATUS_FAILED = 'failed';
+    const STATUS_FINISHED = 'finished';
+    
     private $attributes;
     private $id;
     private $logger;
@@ -46,6 +51,10 @@ abstract class Job
     
     protected function getContainer() {
         return $this->container;
+    }
+    
+    public function setBroker($broker) {
+        $this->broker = $broker;
     }
 
     public function setup() {

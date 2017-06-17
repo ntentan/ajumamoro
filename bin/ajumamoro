@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 $container = new Container();
 $container->bind(LoggerInterface::class)->to(function($container) {
     $logger = new Monolog\Logger("ajumamoro");
-    $logger->pushHandler(new StreamHandler(STDOUT, Logger::INFO));
+    $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
     return $logger;
 })->asSingleton();
 $container

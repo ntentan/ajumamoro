@@ -35,21 +35,36 @@ class Runner
     public function logException(\Exception $exception, $prefix = "Exception thrown") {
         $class = new \ReflectionClass($exception);
         $this->logger->critical("$prefix [{$class->getName()}] {$exception->getMessage()} on line {$exception->getLine()} of {$exception->getFile()}\n");
-        $this->logger->debug("Debug trace for exception {$exception->getTraceAsString()}");
+        $this->logger->debug("Debug trace for exception: {$exception->getTraceAsString()}");
     }
 
     public function deleteJob($job) {
         Store::getInstance()->delete($job);
     }
 
+    /**
+     * 
+     * @param \ajumamoro\Job $job
+     */
     private function runJob($job) {
         try {
             $this->logger->notice("Job #{$this->currentJobId} [{$job->getName()}] started.");
+            $status = $this->broker->getStatus($job->getId());
+            $status['status'] = Job::STATUS_RUNNING;
+            $status['started'] = date(DATE_RFC3339_EXTENDED);
+            $this->broker->setStatus($job->getId(), $status);
             $job->setup();
-            $job->go();
+            $response = $job->go();
             $job->tearDown();
+            $status['status'] = Job::STATUS_FINISHED;
+            $status['finished'] = date(DATE_RFC3339_EXTENDED);
+            $status['response'] = $response;
+            $this->broker->setStatus($job->getId(), $status);
             $this->logger->notice("Job #{$this->currentJobId} [{$job->getName()}] finished.");
         } catch (\Exception $e) {
+            $status['status'] = Job::STATUS_FAILED;
+            $status['failed'] = date(DATE_RFC3339_EXTENDED);
+            $this->broker->setStatus($job->getId(), $status);
             $this->logException($e, "Job #{$this->currentJobId}  [{$job->getName()}] Exception");
             $this->logger->alert("Job #{$this->currentJobId}  [{$job->getName()}] died.");
         }
@@ -60,7 +75,7 @@ class Runner
         $job->setLogger($this->logger);
         $job->setContainer($this->container);
         $this->logger->notice("Starting job #" . $this->currentJobId);
-
+        
         if (!function_exists('pcntl_fork')) {
             $this->runJob($job);
             return;
@@ -110,9 +125,6 @@ class Runner
     public function getNextJob() {
         $jobInfo = $this->broker->get();
 
-        if (file_exists($jobInfo['path']))
-            require_once $jobInfo['path'];
-
         if (!class_exists($jobInfo['class'])) {
             $this->logger->error("Class {$jobInfo['class']} for scheduled job not found");
             return false;
@@ -124,7 +136,7 @@ class Runner
             $job->setId($jobInfo['id']);
             return $job;
         } else {
-            $this->logger->error("Scheduled job is not of type \\ajumamoro\\Job.");
+            $this->logger->error("Scheduled job is not of type \\ajumamoro\\Job");
             return false;
         }
     }
