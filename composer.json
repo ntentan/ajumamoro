@@ -2,8 +2,8 @@
     "name" : "ekowabaka/ajumamoro",
     "require": {
         "ekowabaka/clearice" : "1.*",
-        "ntentan/config" : "dev-master",
-        "ntentan/utils" : "dev-master",
+        "ntentan/config" : "0.*",
+        "ntentan/utils" : "0.*",
         "predis/predis": "@stable",
         "monolog/monolog": "@stable"
     },
