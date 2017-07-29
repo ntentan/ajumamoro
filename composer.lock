@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b228ad26fceee5ecc891fdf55e96214",
+    "content-hash": "a729361c5c415ffcd3abf7753683e029",
     "packages": [
         {
             "name": "ekowabaka/clearice",
@@ -124,16 +124,16 @@
         },
         {
             "name": "ntentan/config",
-            "version": "v0.4.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/config.git",
-                "reference": "2d4a27b080b43aa2ff1bcbf7d3b620f8709b0fef"
+                "reference": "6fdfa0fc948e17e93f316fe27f47d6a9d14e3782"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/config/zipball/2d4a27b080b43aa2ff1bcbf7d3b620f8709b0fef",
-                "reference": "2d4a27b080b43aa2ff1bcbf7d3b620f8709b0fef",
+                "url": "https://api.github.com/repos/ntentan/config/zipball/6fdfa0fc948e17e93f316fe27f47d6a9d14e3782",
+                "reference": "6fdfa0fc948e17e93f316fe27f47d6a9d14e3782",
                 "shasum": ""
             },
             "require-dev": {
@@ -158,25 +158,68 @@
                 }
             ],
             "description": "Configurations manager for ntentan",
-            "time": "2017-06-26T20:22:37+00:00"
+            "time": "2017-07-03T18:11:22+00:00"
         },
         {
-            "name": "ntentan/utils",
+            "name": "ntentan/panie",
             "version": "v0.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ntentan/utils.git",
-                "reference": "ebe83b958d4a096a34f3c5db4f4bbb80f5e6a877"
+                "url": "https://github.com/ntentan/panie.git",
+                "reference": "a3c8f44ca7cd454edfc67855ea863a411442fa51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/utils/zipball/ebe83b958d4a096a34f3c5db4f4bbb80f5e6a877",
-                "reference": "ebe83b958d4a096a34f3c5db4f4bbb80f5e6a877",
+                "url": "https://api.github.com/repos/ntentan/panie/zipball/a3c8f44ca7cd454edfc67855ea863a411442fa51",
+                "reference": "a3c8f44ca7cd454edfc67855ea863a411442fa51",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=7.1"
+            },
             "require-dev": {
-                "mikey179/vfsstream": "~1.0",
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ntentan\\panie\\": "src/",
+                    "ntentan\\panie\\tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Ekow Abaka Ainooson",
+                    "email": "jainooson@gmail.com"
+                }
+            ],
+            "description": "A thin DI container for NtentanFX",
+            "time": "2017-07-25T01:53:22+00:00"
+        },
+        {
+            "name": "ntentan/utils",
+            "version": "v0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ntentan/utils.git",
+                "reference": "6409b605b9f5163be11305c28deccc1eaee7ea71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ntentan/utils/zipball/6409b605b9f5163be11305c28deccc1eaee7ea71",
+                "reference": "6409b605b9f5163be11305c28deccc1eaee7ea71",
+                "shasum": ""
+            },
+            "require": {
+                "ntentan/panie": "0.*"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "@stable",
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "autoload": {
@@ -196,7 +239,7 @@
                 }
             ],
             "description": "Common utility functions shared accross the ntentan framework.",
-            "time": "2017-06-26T02:54:17+00:00"
+            "time": "2017-07-29T07:21:27+00:00"
         },
         {
             "name": "predis/predis",

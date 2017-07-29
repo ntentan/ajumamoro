@@ -1,11 +1,12 @@
 {
-    "name" : "ekowabaka/ajumamoro",
+    "name" : "ntentan/ajumamoro",
     "require": {
         "ekowabaka/clearice" : "1.*",
         "ntentan/config" : "0.*",
         "ntentan/utils" : "0.*",
         "predis/predis": "@stable",
-        "monolog/monolog": "@stable"
+        "monolog/monolog": "@stable",
+	"ntentan/panie": "0.*"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}
