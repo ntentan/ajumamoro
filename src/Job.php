@@ -12,7 +12,7 @@ abstract class Job
     const STATUS_FAILED = 'failed';
     const STATUS_FINISHED = 'finished';
     
-    private $attributes;
+    private $attributes = [];
     private $id;
     private $logger;
     private $container;
@@ -34,7 +34,7 @@ abstract class Job
     }
 
     public function setAttributes($attributes) {
-        $this->attributes = $attributes;
+        $this->attributes = $attributes + $this->attributes;
     }
     
     public function setLogger(LoggerInterface $logger) {
