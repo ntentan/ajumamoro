@@ -9,11 +9,6 @@ use ntentan\panie\Container;
 
 class Runner
 {
-
-    /**
-     *
-     * @var ajumamoro\Store
-     */
     private $currentJobId;
     private $logger;
     private $config;
