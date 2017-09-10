@@ -26,22 +26,6 @@ class Queue
         return $jobId;
     }
 
-    public static function setup(Container $container, $config) {
-        $container->bind(BrokerInterface::class)->to(
-            function($container) use ($config) {
-                $brokerClass = sprintf(
-                    "\\ajumamoro\\brokers\\%sBroker", 
-                    Text::ucamelize($config['broker'])
-                );
-                $broker = $container->resolve(
-                    $brokerClass, 
-                    ['config' => $config[$config['broker']]]
-                );
-                return $broker;
-            }
-        );        
-    }
-
     public function getJobStatus($jobId) {
         return $this->broker->getStatus($jobId);
     }
