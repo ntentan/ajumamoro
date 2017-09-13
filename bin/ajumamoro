@@ -2,44 +2,99 @@
 <?php
 require "vendor/autoload.php";
 
-use clearice\ClearIce;
+use clearice\ArgumentParser;
 use ntentan\panie\Container;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
+use ntentan\config\Config;
+use ntentan\utils\Text;
+use ajumamoro\BrokerInterface;
+
+// Setup arguments
+$argumentParser = new ArgumentParser();
+$argumentParser->addCommands([
+    ['command' => 'start', 'help' => 'start ajumamoro', 'data' => \ajumamoro\commands\Start::class], 
+    ['command' => 'stop', 'help' => 'stop ajumamoro', 'data' => \ajumamoro\commands\Stop::class]]
+);
+$argumentParser->addOptions([
+    array(
+        'short' => 'b',
+        'long' => 'broker',
+        'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
+        'has_value' => true,
+        'value' => 'STORE',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 's',
+        'long' => 'bootstrap',
+        'help' => 'path to a script to include when ajumamoro starts',
+        'has_value' => true,
+        'value' => 'PATH',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 'l',
+        'long' => 'load-class-files',
+        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 'd',
+        'long' => 'daemon',
+        'help' => 'run the process as a daemon',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 'D',
+        'long' => 'delay',
+        'help' => 'waiting time in microseconds between broker polling',
+        'command' => 'start'
+    ),
+    array(
+        'short' => 'c',
+        'long' => 'config',
+        'help' => 'a path to the configuration file for ajumamoro',
+        'value' => 'PATH',
+        'has_value' => true,
+        'command' => 'start'
+    )
+]);
+
+$argumentParser->addHelp();
+$argumentParser->setStrict(true);
+$argumentParser->setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
+$argumentParser->setUsage("[command] [options]");
+
+$arguments = $argumentParser->parse();
+
+if (count($arguments) === 0 && !isset($arguments['__command__'])) {
+    echo $argumentParser->getHelpMessage();
+} else if (!isset($arguments['__command__']) && isset($arguments['stand_alones'])) {
+    echo $argumentParser->getHelpMessage();
+}
 
 // Setup DI bindings
 $container = new Container();
-$container->bind(LoggerInterface::class)->to(function($container) {
-    $logger = new Monolog\Logger("ajumamoro");
-    $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
-    return $logger;
-})->asSingleton();
-$container
-    ->bind(\ntentan\config\Config::class)
-    ->to(\ntentan\config\Config::class)
-    ->asSingleton();
+$container->setup(
+    [
+        LoggerInterface::class => [function($container) {
+            $logger = new Monolog\Logger("ajumamoro");
+            $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
+            return $logger;
+        }, 'singleton' => true],
+        Config::class => [function() use ($arguments) {
+            $config = new Config();
+            $config->readPath($arguments['config']);
+            return $config;
+        }, 'singleton' => true],
+        BrokerInterface::class => function($container) {
+            $config = $container->resolve(Config::class);
+            $broker = $config->get('broker');
+            $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($broker) . "Broker";
+            return $container->resolve($brokerClass, ['config' => $config->get($broker)]);
+        }
+    ]);
 
-// Setup clearice
-ClearIce::setContainer($container);
-ClearIce::addCommands(
-        ajumamoro\commands\Start::class, ajumamoro\commands\Stop::class
-);
-
-ClearIce::addHelp();
-ClearIce::setStrict(true);
-ClearIce::setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
-ClearIce::setUsage("[command] [options]");
-
-try {
-    $arguments = ClearIce::parse();
-} catch (\Exception $e) {
-    fputs(STDERR, "ajumamor failed to start: {$e->getMessage()}\n");
-    die();
-}
-
-if (count($arguments) === 0 || $arguments['__command__'] == '') {
-    echo ClearIce::getHelpMessage();
-} else if (!isset($arguments['__command__']) && isset($arguments['stand_alones'])) {
-    echo ClearIce::getHelpMessage();
-}
+$container->resolve($arguments['data'])->run();

@@ -5,7 +5,6 @@ namespace ajumamoro;
 use Psr\Log\LoggerInterface;
 use ntentan\config\Config;
 use ajumamoro\BrokerInterface;
-use ntentan\panie\Container;
 
 class Runner
 {
@@ -13,13 +12,11 @@ class Runner
     private $logger;
     private $config;
     private $broker;
-    private $container;
     
-    public function __construct(Container $container, LoggerInterface $logger, BrokerInterface $broker, Config $config) {
+    public function __construct(LoggerInterface $logger, BrokerInterface $broker, Config $config) {
         $this->logger = $logger;
         $this->broker = $broker;
         $this->config = $config;
-        $this->container = $container;
     }
 
     /**
@@ -88,8 +85,7 @@ class Runner
     public function mainLoop() {
         $bootstrap = $this->config->get('broker');
         if ($bootstrap) {
-            $container = $this->container;
-            (function() use ($container) {
+            (function() {
                 require $this->config->get('bootstrap');
             })();
         }

@@ -8,15 +8,8 @@ use ajumamoro\Configuration;
 class Stop implements \clearice\CommandInterface
 {
 
-    public static function getCommandOptions() {
-
-        return [
-            'command' => 'stop',
-            'help' => 'stop the ajumamoro daemon'
-        ];
-    }
-
-    public function run($options) {
+    public function run($options)
+    {
         ClearIce::output("Stopping ajumamoro daemon ... ");
         $options = Configuration::init($options);
         $pidFile = Configuration::get('pid_file', './ajumamoro.pid');
