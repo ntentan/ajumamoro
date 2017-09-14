@@ -65,7 +65,6 @@ class Runner
     private function executeJob(Job $job) {
         $this->currentJobId = $job->getId();
         $job->setLogger($this->logger);
-        $job->setContainer($this->container);
         $this->logger->notice("Starting job #" . $this->currentJobId);
         
         if (!function_exists('pcntl_fork')) {
