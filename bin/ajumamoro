@@ -12,7 +12,7 @@ use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
 
 // Setup arguments
-$argumentParser = new ArgumentParser();
+$argumentParser = new ArgumentParser(new clearice\ConsoleIO());
 $argumentParser->addCommands([
     ['command' => 'start', 'help' => 'start ajumamoro', 'data' => \ajumamoro\commands\Start::class], 
     ['command' => 'stop', 'help' => 'stop ajumamoro', 'data' => \ajumamoro\commands\Stop::class]]
@@ -67,7 +67,7 @@ $argumentParser->setStrict(true);
 $argumentParser->setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
 $argumentParser->setUsage("[command] [options]");
 
-$arguments = $argumentParser->parse();
+$arguments = $argumentParser->parse($argv);
 
 if (count($arguments) === 0 && !isset($arguments['__command__'])) {
     echo $argumentParser->getHelpMessage();

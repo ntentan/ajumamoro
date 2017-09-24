@@ -1,7 +1,7 @@
 {
     "name" : "ntentan/ajumamoro",
     "require": {
-        "ekowabaka/clearice" : "1.*",
+        "ekowabaka/clearice" : "2.*",
         "ntentan/config" : "0.*",
         "ntentan/utils" : "0.*",
         "predis/predis": "@stable",

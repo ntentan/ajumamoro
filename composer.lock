@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a729361c5c415ffcd3abf7753683e029",
+    "content-hash": "aea8c5ada25833aed8ccf2f0be5b237f",
     "packages": [
         {
             "name": "ekowabaka/clearice",
-            "version": "v1.1.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekowabaka/clearice.git",
-                "reference": "8f0bae4d789c6cae891a733a8f517df9c0c39c34"
+                "reference": "d1618d8ec91a96cc92f3d48d9c8934cef1fdb802"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/8f0bae4d789c6cae891a733a8f517df9c0c39c34",
-                "reference": "8f0bae4d789c6cae891a733a8f517df9c0c39c34",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/d1618d8ec91a96cc92f3d48d9c8934cef1fdb802",
+                "reference": "d1618d8ec91a96cc92f3d48d9c8934cef1fdb802",
                 "shasum": ""
             },
             "require-dev": {
-                "mikey179/vfsstream": "1.*",
-                "phpunit/phpunit": "4.*"
+                "mikey179/vfsstream": "@stable",
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "autoload": {
@@ -42,7 +42,7 @@
                 }
             ],
             "description": "A tool to help in the building of CLI apps. Provides command line parsing and simple console I/O interfaces.",
-            "time": "2017-06-26T23:13:31+00:00"
+            "time": "2017-09-23T04:17:26+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -124,21 +124,20 @@
         },
         {
             "name": "ntentan/config",
-            "version": "v0.4.1",
+            "version": "v0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/config.git",
-                "reference": "6fdfa0fc948e17e93f316fe27f47d6a9d14e3782"
+                "reference": "b7998cbf61475942990cd873bc1dedd6439a0ab5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/config/zipball/6fdfa0fc948e17e93f316fe27f47d6a9d14e3782",
-                "reference": "6fdfa0fc948e17e93f316fe27f47d6a9d14e3782",
+                "url": "https://api.github.com/repos/ntentan/config/zipball/b7998cbf61475942990cd873bc1dedd6439a0ab5",
+                "reference": "b7998cbf61475942990cd873bc1dedd6439a0ab5",
                 "shasum": ""
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0",
-                "symfony/yaml": "~2.1"
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "autoload": {
@@ -158,24 +157,25 @@
                 }
             ],
             "description": "Configurations manager for ntentan",
-            "time": "2017-07-03T18:11:22+00:00"
+            "time": "2017-09-17T14:10:38+00:00"
         },
         {
             "name": "ntentan/panie",
-            "version": "v0.4.0",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/panie.git",
-                "reference": "a3c8f44ca7cd454edfc67855ea863a411442fa51"
+                "reference": "95b05c2762491e09bc6c3d7ac029c1683c8e3715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/panie/zipball/a3c8f44ca7cd454edfc67855ea863a411442fa51",
-                "reference": "a3c8f44ca7cd454edfc67855ea863a411442fa51",
+                "url": "https://api.github.com/repos/ntentan/panie/zipball/95b05c2762491e09bc6c3d7ac029c1683c8e3715",
+                "reference": "95b05c2762491e09bc6c3d7ac029c1683c8e3715",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.1",
+                "psr/container": "^1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "@stable"
@@ -198,24 +198,21 @@
                 }
             ],
             "description": "A thin DI container for NtentanFX",
-            "time": "2017-07-25T01:53:22+00:00"
+            "time": "2017-09-24T02:59:55+00:00"
         },
         {
             "name": "ntentan/utils",
-            "version": "v0.5.2",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/utils.git",
-                "reference": "6409b605b9f5163be11305c28deccc1eaee7ea71"
+                "reference": "42bb8aaf177d57b2f918bca3e1460ab1a485f485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/utils/zipball/6409b605b9f5163be11305c28deccc1eaee7ea71",
-                "reference": "6409b605b9f5163be11305c28deccc1eaee7ea71",
+                "url": "https://api.github.com/repos/ntentan/utils/zipball/42bb8aaf177d57b2f918bca3e1460ab1a485f485",
+                "reference": "42bb8aaf177d57b2f918bca3e1460ab1a485f485",
                 "shasum": ""
-            },
-            "require": {
-                "ntentan/panie": "0.*"
             },
             "require-dev": {
                 "mikey179/vfsstream": "@stable",
@@ -239,7 +236,7 @@
                 }
             ],
             "description": "Common utility functions shared accross the ntentan framework.",
-            "time": "2017-07-29T07:21:27+00:00"
+            "time": "2017-09-18T02:34:45+00:00"
         },
         {
             "name": "predis/predis",
@@ -290,6 +287,55 @@
                 "redis"
             ],
             "time": "2016-06-16T16:22:20+00:00"
+        },
+        {
+            "name": "psr/container",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/log",
