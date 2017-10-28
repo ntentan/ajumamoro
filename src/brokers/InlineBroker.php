@@ -2,16 +2,13 @@
 
 namespace ajumamoro\brokers;
 
-use ajumamoro\BrokerInteface;
+use ajumamoro\BrokerInterface;
 
-class InlineBroker implements BrokerInteface
+class InlineBroker implements BrokerInterface
 {
+    private $status;
 
     public function get() {
-        
-    }
-
-    public function init() {
         
     }
 
@@ -22,4 +19,13 @@ class InlineBroker implements BrokerInteface
         $job->tearDown();
     }
 
+    public function getStatus($job)
+    {
+        return $this->status;
+    }
+
+    public function setStatus($job, $status)
+    {
+        $this->status = $status;
+    }
 }

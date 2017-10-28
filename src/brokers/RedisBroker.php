@@ -19,6 +19,17 @@ class RedisBroker implements BrokerInterface
      */
     private $redis;
 
+    public function __construct($config) {
+        $this->redis = new \Predis\Client($config);
+        try {
+            $this->redis->connect();
+        } catch (\Predis\CommunicationException $ex) {
+            throw new BrokerConnectionException(
+                "Failed to connect to redis broker: {$ex->getMessage()}"
+            );
+        }
+    }
+
     /**
      * 
      * @return Job
@@ -31,17 +42,6 @@ class RedisBroker implements BrokerInterface
         return unserialize($response);
     }
 
-    public function __construct($config) {
-        $this->redis = new \Predis\Client($config);
-        try {
-            $this->redis->connect();
-        } catch (\Predis\CommunicationException $ex) {
-            throw new BrokerConnectionException(
-                "Failed to connect to redis broker: {$ex->getMessage()}"
-            );
-        }
-    }
-
     public function put($job) {
         $job['id'] = $this->redis->incr("job_id_sequence");
         $this->redis->lpush("job_queue", serialize($job));
@@ -49,8 +49,8 @@ class RedisBroker implements BrokerInterface
     }
 
     /**
-     * 
-     * @param \ajumamoro\Job $job
+     *
+     * @param $jobId
      * @return string
      */
     public function getStatus($jobId) {
