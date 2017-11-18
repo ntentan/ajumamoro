@@ -8,11 +8,12 @@ class InlineBroker implements BrokerInterface
 {
     private $status;
 
-    public function get() {
-        
+    public function get()
+    {
     }
 
-    public function put($job) {
+    public function put($job)
+    {
         $job = unserialize($job['object']);
         $job->setup();
         $job->go();

@@ -4,8 +4,8 @@
         "ekowabaka/clearice" : "2.*",
         "ntentan/config" : "0.*",
         "ntentan/utils" : "0.*",
-        "predis/predis": "@stable",
-        "monolog/monolog": "@stable",
+        "predis/predis": "^1.0",
+        "monolog/monolog": "^1.0",
 	"ntentan/panie": "0.*"
     },
     "autoload" : {

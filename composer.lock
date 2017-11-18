@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "aea8c5ada25833aed8ccf2f0be5b237f",
+    "content-hash": "6d2f6c7c9adab6d6c38967111783485e",
     "packages": [
         {
             "name": "ekowabaka/clearice",
@@ -202,16 +202,16 @@
         },
         {
             "name": "ntentan/utils",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/utils.git",
-                "reference": "42bb8aaf177d57b2f918bca3e1460ab1a485f485"
+                "reference": "7d7f55535dacfbd286d12671c3e68f346d62b454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/utils/zipball/42bb8aaf177d57b2f918bca3e1460ab1a485f485",
-                "reference": "42bb8aaf177d57b2f918bca3e1460ab1a485f485",
+                "url": "https://api.github.com/repos/ntentan/utils/zipball/7d7f55535dacfbd286d12671c3e68f346d62b454",
+                "reference": "7d7f55535dacfbd286d12671c3e68f346d62b454",
                 "shasum": ""
             },
             "require-dev": {
@@ -236,7 +236,7 @@
                 }
             ],
             "description": "Common utility functions shared accross the ntentan framework.",
-            "time": "2017-09-18T02:34:45+00:00"
+            "time": "2017-11-18T06:59:14+00:00"
         },
         {
             "name": "predis/predis",
@@ -388,10 +388,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "predis/predis": 0,
-        "monolog/monolog": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
