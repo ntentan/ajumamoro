@@ -4,6 +4,10 @@ namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
 
+/**
+ * The inline broker runs inline within the current request or session.
+ * This broker should only be used for test cases or in CLI applications.
+ */
 class InlineBroker implements BrokerInterface
 {
     private $status;
