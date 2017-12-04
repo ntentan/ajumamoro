@@ -41,11 +41,19 @@ abstract class Job
         $this->attributes = $attributes + $this->attributes;
     }
 
+    public function setAttribute($attribute, $value)
+    {
+        $this->attributes[$attribute] = $value;
+    }
+
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * @return LoggerInterface
+     */
     protected function getLogger()
     {
         return $this->logger;
