@@ -59,7 +59,16 @@ $argumentParser->addOptions([
         'value' => 'PATH',
         'has_value' => true,
         'command' => 'start'
-    )
+    ),
+    [
+        'short' => 'i',
+        'long' => 'instance',
+        'help' => 'a name for a given ajumamoro instance',
+        'value' => 'INSTANCE',
+        'has_value' => true,
+        'command' => 'start',
+        'default' => 'default'
+    ]
 ]);
 
 $argumentParser->addHelp();

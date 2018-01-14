@@ -4,13 +4,15 @@ namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
 
-/**
- * The inline broker runs inline within the current request or session.
- * This broker should only be used for test cases or in CLI applications.
- */
 class InlineBroker implements BrokerInterface
 {
     private $status;
+    private $jobInfoDir;
+
+    public function __construct($jobInfoDir = 'jobs')
+    {
+        $this->jobInfoDir = $jobInfoDir;
+    }
 
     public function get()
     {
@@ -18,19 +20,24 @@ class InlineBroker implements BrokerInterface
 
     public function put($job)
     {
+        $jobId = uniqid('job');
         $job = unserialize($job['object']);
         $job->setup();
         $job->go();
         $job->tearDown();
+        return $jobId;
     }
 
     public function getStatus($job)
     {
-        return $this->status;
+        $path = "{$this->jobInfoDir}/$job";
+        if(file_exists($path)) {
+            return file_get_contents($path);
+        }
     }
 
     public function setStatus($job, $status)
     {
-        $this->status = $status;
+        file_put_contents("{$this->jobInfoDir}/$job", serialize($status));
     }
 }
