@@ -3,6 +3,7 @@
 namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
+use ajumamoro\Job;
 
 class InlineBroker implements BrokerInterface
 {
@@ -38,6 +39,9 @@ class InlineBroker implements BrokerInterface
 
     public function setStatus($job, $status)
     {
-        file_put_contents("{$this->jobInfoDir}/$job", serialize($status));
+        // Prevent from writing statuses for jobs which are just queued since we're running inline anyway.
+        if(is_dir($this->jobInfoDir) && is_writable($this->jobInfoDir) && $status['status'] != Job::STATUS_QUEUED) {
+            file_put_contents("{$this->jobInfoDir}/$job", serialize($status));
+        }
     }
 }
