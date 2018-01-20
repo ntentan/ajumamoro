@@ -17,6 +17,7 @@ class InlineBroker implements BrokerInterface
 
     public function get()
     {
+        // No point in retrieving jobs for the inline broker.
     }
 
     public function put($job)

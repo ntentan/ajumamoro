@@ -36,12 +36,12 @@ abstract class Job
         return (new \ReflectionClass($this))->getName();
     }
 
-    public function setAttributes($attributes)
+    public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes + $this->attributes;
     }
 
-    public function setAttribute($attribute, $value)
+    public function setAttribute(string $attribute, $value)
     {
         $this->attributes[$attribute] = $value;
     }
