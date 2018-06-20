@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekowabaka/clearice.git",
-                "reference": "07a84c706fba64e77a6bd5df6a923c406015e029"
+                "reference": "79d7ba6c31be384858cdd1a42d7891a5178e67a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/07a84c706fba64e77a6bd5df6a923c406015e029",
-                "reference": "07a84c706fba64e77a6bd5df6a923c406015e029",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/79d7ba6c31be384858cdd1a42d7891a5178e67a1",
+                "reference": "79d7ba6c31be384858cdd1a42d7891a5178e67a1",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 }
             ],
             "description": "A tool to help in the building of CLI apps. Provides command line parsing and simple console I/O interfaces.",
-            "time": "2018-06-20T19:02:40+00:00"
+            "time": "2018-06-20T23:37:31+00:00"
         },
         {
             "name": "monolog/monolog",
