@@ -8,7 +8,7 @@ use Predis\Client;
 use Predis\CommunicationException;
 
 /**
- * Description of RedisBroker
+ * Redis messaging broker used for running AjumaMoro Jobs
  *
  * @author ekow
  */
@@ -34,8 +34,9 @@ class RedisBroker implements BrokerInterface
     }
 
     /**
+     * Get the next job on the job queue.
      *
-     * @return Job
+     * @return mixed Job
      */
     public function get()
     {
@@ -46,6 +47,12 @@ class RedisBroker implements BrokerInterface
         return unserialize($response);
     }
 
+    /**
+     * Add a job to the queue.
+     *
+     * @param mixed $job
+     * @return int
+     */
     public function put($job)
     {
         $job['id'] = $this->redis->incr("job_id_sequence");
@@ -54,6 +61,7 @@ class RedisBroker implements BrokerInterface
     }
 
     /**
+     * Get the status of a job on the queue.
      *
      * @param $jobId
      * @return string
@@ -63,6 +71,13 @@ class RedisBroker implements BrokerInterface
         return json_decode($this->redis->get("job_status:$jobId"), true);
     }
 
+    /**
+     * Set the status of a job on the queue.
+     *
+     * @param $jobId
+     * @param $status
+     * @return mixed
+     */
     public function setStatus($jobId, $status)
     {
         return $this->redis->set("job_status:$jobId", json_encode($status));

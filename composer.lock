@@ -1,24 +1,27 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d2f6c7c9adab6d6c38967111783485e",
+    "content-hash": "ae67771e2be183f451ec78a3beeb147f",
     "packages": [
         {
             "name": "ekowabaka/clearice",
-            "version": "v2.0.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekowabaka/clearice.git",
-                "reference": "d1618d8ec91a96cc92f3d48d9c8934cef1fdb802"
+                "reference": "47edb605e840187c77e14eb8066d80a00ed3b7d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/d1618d8ec91a96cc92f3d48d9c8934cef1fdb802",
-                "reference": "d1618d8ec91a96cc92f3d48d9c8934cef1fdb802",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/47edb605e840187c77e14eb8066d80a00ed3b7d1",
+                "reference": "47edb605e840187c77e14eb8066d80a00ed3b7d1",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
             },
             "require-dev": {
                 "mikey179/vfsstream": "@stable",
@@ -27,7 +30,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "clearice\\": "src/"
+                    "clearice\\": "src/",
+                    "clearice\\tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -42,20 +46,20 @@
                 }
             ],
             "description": "A tool to help in the building of CLI apps. Provides command line parsing and simple console I/O interfaces.",
-            "time": "2017-09-23T04:17:26+00:00"
+            "time": "2018-08-05T04:23:40+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.23.0",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
+                "reference": "c465e1144536862e03f519cb3d65e924062cabfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
-                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c465e1144536862e03f519cb3d65e924062cabfb",
+                "reference": "c465e1144536862e03f519cb3d65e924062cabfb",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +124,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-06-19T01:22:40+00:00"
+            "time": "2018-06-19T07:22:34+00:00"
         },
         {
             "name": "ntentan/config",
@@ -161,16 +165,16 @@
         },
         {
             "name": "ntentan/panie",
-            "version": "v0.5.1",
+            "version": "v0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/panie.git",
-                "reference": "95b05c2762491e09bc6c3d7ac029c1683c8e3715"
+                "reference": "c9340e3723224e6e34de60101b090ffcf1c3caf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/panie/zipball/95b05c2762491e09bc6c3d7ac029c1683c8e3715",
-                "reference": "95b05c2762491e09bc6c3d7ac029c1683c8e3715",
+                "url": "https://api.github.com/repos/ntentan/panie/zipball/c9340e3723224e6e34de60101b090ffcf1c3caf6",
+                "reference": "c9340e3723224e6e34de60101b090ffcf1c3caf6",
                 "shasum": ""
             },
             "require": {
@@ -198,25 +202,26 @@
                 }
             ],
             "description": "A thin DI container for NtentanFX",
-            "time": "2017-09-24T02:59:55+00:00"
+            "time": "2018-09-16T13:02:43+00:00"
         },
         {
             "name": "ntentan/utils",
-            "version": "v0.6.1",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/utils.git",
-                "reference": "7d7f55535dacfbd286d12671c3e68f346d62b454"
+                "reference": "151f3582ee6007ea77a38d2b6c590289331e19a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/utils/zipball/7d7f55535dacfbd286d12671c3e68f346d62b454",
-                "reference": "7d7f55535dacfbd286d12671c3e68f346d62b454",
+                "url": "https://api.github.com/repos/ntentan/utils/zipball/151f3582ee6007ea77a38d2b6c590289331e19a1",
+                "reference": "151f3582ee6007ea77a38d2b6c590289331e19a1",
                 "shasum": ""
             },
             "require-dev": {
                 "mikey179/vfsstream": "@stable",
-                "phpunit/phpunit": "@stable"
+                "php-mock/php-mock-phpunit": "^2",
+                "phpunit/phpunit": "^6 <6.5"
             },
             "type": "library",
             "autoload": {
@@ -236,20 +241,20 @@
                 }
             ],
             "description": "Common utility functions shared accross the ntentan framework.",
-            "time": "2017-11-18T06:59:14+00:00"
+            "time": "2018-08-06T00:25:55+00:00"
         },
         {
             "name": "predis/predis",
-            "version": "v1.1.1",
+            "version": "v1.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nrk/predis.git",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+                "reference": "111d100ee389d624036b46b35ed0c9ac59c71313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/111d100ee389d624036b46b35ed0c9ac59c71313",
+                "reference": "111d100ee389d624036b46b35ed0c9ac59c71313",
                 "shasum": ""
             },
             "require": {
@@ -286,20 +291,20 @@
                 "predis",
                 "redis"
             ],
-            "time": "2016-06-16T16:22:20+00:00"
+            "time": "2017-07-12T14:39:17+00:00"
         },
         {
             "name": "psr/container",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+                "reference": "2cc4a01788191489dc7459446ba832fa79a216a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/2cc4a01788191489dc7459446ba832fa79a216a7",
+                "reference": "2cc4a01788191489dc7459446ba832fa79a216a7",
                 "shasum": ""
             },
             "require": {
@@ -335,20 +340,20 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2017-06-28T15:35:32+00:00"
         },
         {
             "name": "psr/log",
-            "version": "1.0.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+                "reference": "3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda",
+                "reference": "3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda",
                 "shasum": ""
             },
             "require": {
@@ -382,13 +387,18 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2018-04-03T15:59:15+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "ekowabaka/clearice": 0,
+        "ntentan/config": 0,
+        "ntentan/utils": 0,
+        "ntentan/panie": 0
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

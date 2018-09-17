@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
-require "vendor/autoload.php";
+require __DIR__ . "/../vendor/autoload.php";
 
-use clearice\ArgumentParser;
+use clearice\argparser\ArgumentParser;
 use ntentan\panie\Container;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -12,67 +12,68 @@ use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
 
 // Setup arguments
-$argumentParser = new ArgumentParser(new clearice\ConsoleIO());
-$argumentParser->addCommands([
-    ['command' => 'start', 'help' => 'start ajumamoro', 'data' => \ajumamoro\commands\Start::class], 
-    ['command' => 'stop', 'help' => 'stop ajumamoro', 'data' => \ajumamoro\commands\Stop::class]]
-);
-$argumentParser->addOptions([
-    array(
-        'short' => 'b',
-        'long' => 'broker',
+$argumentParser = new ArgumentParser();
+$argumentParser->addCommand(['name' => 'start', 'help' => 'start the ajumamoro broker']);
+$argumentParser->addCommand(['name' => 'stop', 'help' => 'stop the ajumamoro broker']);
+
+$argumentParser->addOption(array(
+        'short_name' => 'b',
+        'name' => 'broker',
         'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
-        'has_value' => true,
+        'type' => 'string',
         'value' => 'STORE',
         'command' => 'start'
-    ),
-    array(
-        'short' => 's',
-        'long' => 'bootstrap',
+    ));
+$argumentParser->addOption(array(
+        'short_name' => 's',
+        'name' => 'bootstrap',
         'help' => 'path to a script to include when ajumamoro starts',
-        'has_value' => true,
+        'type' => 'string',
         'value' => 'PATH',
         'command' => 'start'
-    ),
-    array(
-        'short' => 'l',
-        'long' => 'load-class-files',
+    ));
+$argumentParser->addOption(array(
+        'short_name' => 'l',
+        'name' => 'load-class-files',
         'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
         'command' => 'start'
-    ),
-    array(
-        'short' => 'd',
-        'long' => 'daemon',
+    ));
+$argumentParser->addOption(array(
+        'short_name' => 'd',
+        'name' => 'daemon',
         'help' => 'run the process as a daemon',
         'command' => 'start'
-    ),
-    array(
-        'short' => 'D',
-        'long' => 'delay',
+    ));
+$argumentParser->addOption(array(
+        'short_name' => 'D',
+        'name' => 'delay',
         'help' => 'waiting time in microseconds between broker polling',
         'command' => 'start'
-    ),
-    array(
-        'short' => 'c',
-        'long' => 'config',
+    ));
+$argumentParser->addOption(array(
+        'short_name' => 'c',
+        'name' => 'config',
         'help' => 'a path to the configuration file for ajumamoro',
         'value' => 'PATH',
-        'has_value' => true,
+        'type' => 'string',
         'command' => 'start'
-    )
-]);
+    ));
+$argumentParser->addOption([
+        'short_name' => 'i',
+        'name' => 'instance',
+        'help' => 'a name for a given ajumamoro instance',
+        'value' => 'INSTANCE',
+        'type' => 'string',
+        'command' => 'start',
+        'default' => 'default'
+    ]);
 
-$argumentParser->addHelp();
-$argumentParser->setStrict(true);
-$argumentParser->setDescription("Ajumamoro is a tool for running background tasks in PHP apps.");
-$argumentParser->setUsage("[command] [options]");
+$argumentParser->enableHelp("Ajumamoro is a tool for running background tasks in PHP apps.");
+$arguments = $argumentParser->parse();
 
-$arguments = $argumentParser->parse($argv);
-
-if (count($arguments) === 0 && !isset($arguments['__command__'])) {
-    echo $argumentParser->getHelpMessage();
-} else if (!isset($arguments['__command__']) && isset($arguments['stand_alones'])) {
-    echo $argumentParser->getHelpMessage();
+if (!isset($arguments['__command'])) {
+    echo "Unknown command [{$arguments['__args'][0]}]. Use {$argv[0]} --help for more information.\n";
+    exit();
 }
 
 // Setup DI bindings
@@ -97,4 +98,6 @@ $container->setup(
         }
     ]);
 
-$container->resolve($arguments['data'])->run();
+// Run require command
+$class = "\\ajumamoro\\commands\\" . ucfirst($arguments['__command']);
+$container->resolve($class)->run();

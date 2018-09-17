@@ -1,15 +1,16 @@
 {
     "name" : "ntentan/ajumamoro",
     "require": {
-        "ekowabaka/clearice" : "2.*",
-        "ntentan/config" : "0.*",
-        "ntentan/utils" : "0.*",
+        "ekowabaka/clearice" : "@stable",
+        "ntentan/config" : "@stable",
+        "ntentan/utils" : "@stable",
         "predis/predis": "^1.0",
         "monolog/monolog": "^1.0",
-	"ntentan/panie": "0.*"
+	    "ntentan/panie": "@stable"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}
     },
-    "bin" : ["bin/ajumamoro"]
+    "bin" : ["bin/ajumamoro"],
+    "minimum-stability": "dev"
 }

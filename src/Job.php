@@ -36,9 +36,14 @@ abstract class Job
         return (new \ReflectionClass($this))->getName();
     }
 
-    public function setAttributes($attributes)
+    public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes + $this->attributes;
+    }
+
+    public function setAttribute(string $attribute, $value)
+    {
+        $this->attributes[$attribute] = $value;
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -46,6 +51,9 @@ abstract class Job
         $this->logger = $logger;
     }
 
+    /**
+     * @return LoggerInterface
+     */
     protected function getLogger()
     {
         return $this->logger;
