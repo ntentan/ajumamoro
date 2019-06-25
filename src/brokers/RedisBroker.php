@@ -21,9 +21,15 @@ class RedisBroker implements BrokerInterface
      */
     private $redis;
 
+    /**
+     * RedisBroker constructor.
+     *
+     * @param $config Takes an array of options for the redis connection.
+     * @throws BrokerConnectionException
+     */
     public function __construct($config)
     {
-        $this->redis = new Client($config['parameters'], $config['options'] ?? null);
+        $this->redis = new Client($config['parameters'] ?? null, $config['options'] ?? null);
         try {
             $this->redis->connect();
         } catch (CommunicationException $ex) {
