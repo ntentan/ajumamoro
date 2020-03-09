@@ -39,7 +39,7 @@ class Queue
     /**
      * Retrieves the status of a job on the queue.
      *
-     * @param $jobId The id of the job
+     * @param string $jobId id of the job
      * @return string A string containing a description of the job's status.
      */
     public function getJobStatus($jobId)
