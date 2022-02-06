@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use ntentan\config\Config;
 use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
+use ajumamoro\exceptions\AjumamoroException;
 
 
 // Setup arguments
@@ -107,6 +108,9 @@ $container->setup(
         }, 'singleton' => true],
         BrokerInterface::class => function($container) {
             $config = $container->resolve(Config::class);
+            if (!$config->isKeySet('broker')) {
+                throw new AjumamoroException("There is no job broker specified in the configuration file.");
+            }
             $broker = $config->get('broker');
             $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($broker) . "Broker";
             return $container->resolve($brokerClass, ['config' => $config->get($broker)]);
@@ -115,4 +119,10 @@ $container->setup(
 
 // Run require command
 $class = "\\ajumamoro\\commands\\" . ucfirst($arguments['__command']);
-$container->resolve($class)->run();
+
+try {
+    $container->resolve($class)->run();
+} catch (\Exception $e) {
+    fputs(STDERR, "Error: " . $e->getMessage() . "\n");
+    exit(1);
+}
