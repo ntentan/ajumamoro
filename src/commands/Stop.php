@@ -2,10 +2,7 @@
 
 namespace ajumamoro\commands;
 
-use clearice\ClearIce;
-use ajumamoro\Configuration;
-
-class Stop implements \clearice\CommandInterface
+class Stop implements Command
 {
 
     public function run($options)

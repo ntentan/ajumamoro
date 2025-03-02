@@ -3,21 +3,22 @@
 namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
+use ajumamoro\exceptions\AjumamoroException;
 use ajumamoro\Job;
 
 class InlineBroker implements BrokerInterface
 {
-    private $status;
-    private $jobInfoDir;
+//    private $status;
+    private string $jobInfoDir;
 
-    public function __construct($jobInfoDir = 'jobs')
+    public function __construct(array $brokerConfig)
     {
-        $this->jobInfoDir = $jobInfoDir;
+        $this->jobInfoDir = $brokerConfig['jobs_path'] ?? 'jobs';
     }
 
     public function get()
     {
-        // No point in retrieving jobs for the inline broker.
+        throw new AjumamoroException("The inline broker does not require a separate worker application since it run's jobs directly within a PHP request.");
     }
 
     public function put($job)

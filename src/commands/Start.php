@@ -3,12 +3,11 @@
 namespace ajumamoro\commands;
 
 use ntentan\config\Config;
-use clearice\ClearIce;
 use Psr\Log\LoggerInterface;
 use ajumamoro\BrokerInterface;
 use ajumamoro\Runner;
 
-class Start
+class Start implements Command
 {
 
     private $logger;

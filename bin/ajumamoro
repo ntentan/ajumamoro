@@ -13,79 +13,10 @@ use ntentan\panie\Container;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
-use ntentan\config\Config;
 use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
 use ajumamoro\exceptions\AjumamoroException;
-
-
-// Setup arguments
-$argumentParser = new ArgumentParser();
-$argumentParser->addCommand(['name' => 'start', 'help' => 'start the ajumamoro broker']);
-$argumentParser->addCommand(['name' => 'stop', 'help' => 'stop the ajumamoro broker']);
-
-$argumentParser->addOption(array(
-        'short_name' => 'b',
-        'name' => 'broker',
-        'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
-        'type' => 'string',
-        'value' => 'STORE',
-        'command' => 'start'
-    ));
-$argumentParser->addOption(array(
-        'short_name' => 's',
-        'name' => 'bootstrap',
-        'help' => 'path to a script to include when ajumamoro starts',
-        'type' => 'string',
-        'value' => 'PATH',
-        'command' => 'start'
-    ));
-$argumentParser->addOption(array(
-        'short_name' => 'l',
-        'name' => 'load-class-files',
-        'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
-        'command' => 'start'
-    ));
-$argumentParser->addOption(array(
-        'short_name' => 'd',
-        'name' => 'daemon',
-        'help' => 'run the process as a daemon',
-        'command' => 'start'
-    ));
-$argumentParser->addOption(array(
-        'short_name' => 'D',
-        'name' => 'delay',
-        'help' => 'waiting time in microseconds between broker polling',
-        'command' => 'start'
-    ));
-$argumentParser->addOption(array(
-        'short_name' => 'c',
-        'name' => 'config',
-        'help' => 'a path to the configuration file for ajumamoro',
-        'value' => 'PATH',
-        'type' => 'string',
-        'command' => 'start'
-    ));
-$argumentParser->addOption([
-        'short_name' => 'i',
-        'name' => 'instance',
-        'help' => 'a name for a given ajumamoro instance',
-        'value' => 'INSTANCE',
-        'type' => 'string',
-        'command' => 'start',
-        'default' => 'default'
-    ]);
-
-$argumentParser->enableHelp("Ajumamoro is a tool for running background tasks in PHP apps.");
-$arguments = $argumentParser->parse();
-
-if (!isset($arguments['__command']) && isset($arguments['__args'[0]])) {
-    fwrite(STDERR, "You specified an unknown command [{$arguments['__args'][0]}]. Please use {$argv[0]} --help for more information.\n");
-    exit(120);
-} else if(!isset($arguments['__command'])) {
-    fwrite(STDERR, "Please provide a command or use {$argv[0]} --help for more information.\n");
-    exit(120);
-}
+use ajumamoro\commands\Command;
 
 // Setup DI bindings
 $container = new Container();
@@ -96,33 +27,119 @@ $container->setup(
             $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
             return $logger;
         }, 'singleton' => true],
-        Config::class => [function() use ($arguments) {
-            $config = new Config();
-            if(isset($arguments['config']) && file_exists($arguments['config'])) {
-                $config->readPath($arguments['config']);
-            } else {
-                fwrite(STDERR, "Failed to read configuration file. Please provide a valid configuration with the --config option\n");
-                exit(120);
-            }
-            return $config;
-        }, 'singleton' => true],
-        BrokerInterface::class => function($container) {
-            $config = $container->resolve(Config::class);
-            if (!$config->isKeySet('broker')) {
+        '$arguments:array' => [
+            function () {
+                // Setup arguments
+                $argumentParser = new ArgumentParser();
+                $argumentParser->addCommand(['name' => 'start', 'help' => 'start the ajumamoro broker']);
+                $argumentParser->addCommand(['name' => 'stop', 'help' => 'stop the ajumamoro broker']);
+
+                $argumentParser->addOption(array(
+                    'short_name' => 'b',
+                    'name' => 'broker',
+                    'help' => 'specify the backend to be used for storing job tasks. Supported backends: redis, postgresql, mysql and sqlite',
+                    'type' => 'string',
+                    'value' => 'STORE',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption(array(
+                    'short_name' => 's',
+                    'name' => 'bootstrap',
+                    'help' => 'path to a script to include when ajumamoro starts',
+                    'type' => 'string',
+                    'value' => 'PATH',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption(array(
+                    'short_name' => 'l',
+                    'name' => 'load-class-files',
+                    'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption(array(
+                    'short_name' => 'd',
+                    'name' => 'daemon',
+                    'help' => 'run the process as a daemon',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption(array(
+                    'short_name' => 'D',
+                    'name' => 'delay',
+                    'help' => 'waiting time in microseconds between broker polling',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption(array(
+                    'short_name' => 'c',
+                    'name' => 'config',
+                    'help' => 'a path to the configuration file for ajumamoro',
+                    'value' => 'PATH',
+                    'type' => 'string',
+                    'command' => 'start'
+                ));
+                $argumentParser->addOption([
+                    'short_name' => 'i',
+                    'name' => 'instance',
+                    'help' => 'a name for a given ajumamoro instance',
+                    'value' => 'INSTANCE',
+                    'type' => 'string',
+                    'command' => 'start',
+                    'default' => 'default'
+                ]);
+
+                $argumentParser->enableHelp("Ajumamoro is a tool for running background tasks in PHP apps.");
+                return $argumentParser->parse();
+
+//                if (!isset($arguments['__command']) && isset($arguments['__args'[0]])) {
+//                    fwrite(STDERR, "You specified an unknown command [{$arguments['__args'][0]}]. Please use {$argv[0]} --help for more information.\n");
+//                    exit(120);
+//                } else if(!isset($arguments['__command'])) {
+//                    fwrite(STDERR, "Please provide a command or use {$argv[0]} --help for more information.\n");
+//                    exit(120);
+//                }
+            },
+            'singleton' => true
+        ],
+        '$brokerConfig:array' => [
+            function (Container $container) {
+                $ajumamoroConfig = $container->get('$ajumamoroConfig:array');
+                return $ajumamoroConfig[$ajumamoroConfig['broker'] ?? 'default'] ?? [];
+            },
+            'singleton' => true
+        ],
+        '$ajumamoroConfig:array' => [
+            function (Container $container) {
+                $arguments = $container->get('$arguments:array');
+                if(isset($arguments['config']) && file_exists($arguments['config'])) {
+                    return parse_ini_file($arguments['config']);
+                } else if (!isset($arguments['config'])) {
+                    fwrite(STDERR, "Please provide a valid configuration with the --config option\n");
+                    exit(120);
+                } else {
+                    fwrite(STDERR, "Failed to read the configuration file {$arguments['config']}\n");
+                    exit(120);
+                }
+            },
+            'singleton' => true
+        ],
+        BrokerInterface::class => function(Container $container) {
+            $config = $container->get('$ajumamoroConfig:array');
+            if (!isset($config['broker'])) {
                 throw new AjumamoroException("There is no job broker specified in the configuration file.");
             }
-            $broker = $config->get('broker');
-            $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($broker) . "Broker";
-            return $container->resolve($brokerClass, ['config' => $config->get($broker)]);
+
+            $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($config['broker']). "Broker";
+            return $container->get($brokerClass);
+        },
+        Command::class => function($container) {
+            $arguments = $container->get('$arguments:array');
+            $class = "\\ajumamoro\\commands\\" . ucfirst($arguments['__command']);
+            return $container->get($class);
         }
     ]);
 
-// Run require command
-$class = "\\ajumamoro\\commands\\" . ucfirst($arguments['__command']);
-
 try {
-    $container->resolve($class)->run();
+    $container->get(Command::class)->run();
 } catch (\Exception $e) {
-    fputs(STDERR, "Error: " . $e->getMessage() . "\n");
-    exit(1);
+    $container->get(LoggerInterface::class)->error(sprintf("Ajumamoro failed to startup. An exception %s was thrown. %s", get_class($e), $e->getMessage()));
+    throw $e;
 }
