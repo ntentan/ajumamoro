@@ -4,13 +4,12 @@
         "ekowabaka/clearice" : "@stable",
         "ntentan/config" : "@stable",
         "ntentan/utils" : "@stable",
-        "predis/predis": "^1.0",
-        "monolog/monolog": "^1.0",
+        "predis/predis": "@stable",
+        "monolog/monolog": "@stable",
 	    "ntentan/panie": "@stable"
     },
     "autoload" : {
         "psr-4" : { "ajumamoro\\" : "src/"}
     },
-    "bin" : ["bin/ajumamoro"],
-    "minimum-stability": "dev"
+    "bin" : ["bin/ajumamoro"]
 }

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae67771e2be183f451ec78a3beeb147f",
+    "content-hash": "9a643ed5f1a7cd9e70a17cea066b0f1c",
     "packages": [
         {
             "name": "ekowabaka/clearice",
-            "version": "v3.0.0",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekowabaka/clearice.git",
-                "reference": "47edb605e840187c77e14eb8066d80a00ed3b7d1"
+                "reference": "8762c8a75e62df5c1a5505f2c78d6809ab5b3658"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/47edb605e840187c77e14eb8066d80a00ed3b7d1",
-                "reference": "47edb605e840187c77e14eb8066d80a00ed3b7d1",
+                "url": "https://api.github.com/repos/ekowabaka/clearice/zipball/8762c8a75e62df5c1a5505f2c78d6809ab5b3658",
+                "reference": "8762c8a75e62df5c1a5505f2c78d6809ab5b3658",
                 "shasum": ""
             },
             "require": {
@@ -46,25 +46,25 @@
                 }
             ],
             "description": "A tool to help in the building of CLI apps. Provides command line parsing and simple console I/O interfaces.",
-            "time": "2018-08-05T04:23:40+00:00"
+            "time": "2019-03-24T13:49:18+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.x-dev",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c465e1144536862e03f519cb3d65e924062cabfb"
+                "reference": "c861fcba2ca29404dc9e617eedd9eff4616986b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c465e1144536862e03f519cb3d65e924062cabfb",
-                "reference": "c465e1144536862e03f519cb3d65e924062cabfb",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c861fcba2ca29404dc9e617eedd9eff4616986b8",
+                "reference": "c861fcba2ca29404dc9e617eedd9eff4616986b8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "php": "^7.2",
+                "psr/log": "^1.0.1"
             },
             "provide": {
                 "psr/log-implementation": "1.0.0"
@@ -72,33 +72,36 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
-                "graylog2/gelf-php": "~1.0",
-                "jakub-onderka/php-parallel-lint": "0.9",
+                "elasticsearch/elasticsearch": "^6.0",
+                "graylog2/gelf-php": "^1.4.2",
+                "jakub-onderka/php-parallel-lint": "^0.9",
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
-                "phpunit/phpunit": "~4.5",
-                "phpunit/phpunit-mock-objects": "2.3.0",
+                "phpspec/prophecy": "^1.6.1",
+                "phpunit/phpunit": "^8.3",
+                "predis/predis": "^1.1",
+                "rollbar/rollbar": "^1.3",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "sentry/sentry": "^0.13",
                 "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "ext-mbstring": "Allow to work properly with unicode symbols",
+                "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "sentry/sentry": "Allow sending log messages to a Sentry server"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -124,7 +127,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2018-06-19T07:22:34+00:00"
+            "time": "2019-12-20T14:22:59+00:00"
         },
         {
             "name": "ntentan/config",
@@ -165,16 +168,16 @@
         },
         {
             "name": "ntentan/panie",
-            "version": "v0.6.2",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/panie.git",
-                "reference": "c9340e3723224e6e34de60101b090ffcf1c3caf6"
+                "reference": "cd014373566ff6b9c260cf4da315e56120dd740b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/panie/zipball/c9340e3723224e6e34de60101b090ffcf1c3caf6",
-                "reference": "c9340e3723224e6e34de60101b090ffcf1c3caf6",
+                "url": "https://api.github.com/repos/ntentan/panie/zipball/cd014373566ff6b9c260cf4da315e56120dd740b",
+                "reference": "cd014373566ff6b9c260cf4da315e56120dd740b",
                 "shasum": ""
             },
             "require": {
@@ -202,26 +205,26 @@
                 }
             ],
             "description": "A thin DI container for NtentanFX",
-            "time": "2018-09-16T13:02:43+00:00"
+            "time": "2018-12-03T02:49:40+00:00"
         },
         {
             "name": "ntentan/utils",
-            "version": "v0.7.1",
+            "version": "v0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/utils.git",
-                "reference": "151f3582ee6007ea77a38d2b6c590289331e19a1"
+                "reference": "1c81a26c8c61d2da09bcb4d0eb33c7bb5774b9fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/utils/zipball/151f3582ee6007ea77a38d2b6c590289331e19a1",
-                "reference": "151f3582ee6007ea77a38d2b6c590289331e19a1",
+                "url": "https://api.github.com/repos/ntentan/utils/zipball/1c81a26c8c61d2da09bcb4d0eb33c7bb5774b9fd",
+                "reference": "1c81a26c8c61d2da09bcb4d0eb33c7bb5774b9fd",
                 "shasum": ""
             },
             "require-dev": {
                 "mikey179/vfsstream": "@stable",
                 "php-mock/php-mock-phpunit": "^2",
-                "phpunit/phpunit": "^6 <6.5"
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "autoload": {
@@ -241,20 +244,20 @@
                 }
             ],
             "description": "Common utility functions shared accross the ntentan framework.",
-            "time": "2018-08-06T00:25:55+00:00"
+            "time": "2020-02-25T08:18:51+00:00"
         },
         {
             "name": "predis/predis",
-            "version": "v1.1.x-dev",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nrk/predis.git",
-                "reference": "111d100ee389d624036b46b35ed0c9ac59c71313"
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/111d100ee389d624036b46b35ed0c9ac59c71313",
-                "reference": "111d100ee389d624036b46b35ed0c9ac59c71313",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
                 "shasum": ""
             },
             "require": {
@@ -291,20 +294,20 @@
                 "predis",
                 "redis"
             ],
-            "time": "2017-07-12T14:39:17+00:00"
+            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "psr/container",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "2cc4a01788191489dc7459446ba832fa79a216a7"
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/2cc4a01788191489dc7459446ba832fa79a216a7",
-                "reference": "2cc4a01788191489dc7459446ba832fa79a216a7",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
                 "shasum": ""
             },
             "require": {
@@ -340,20 +343,20 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-06-28T15:35:32+00:00"
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/log",
-            "version": "dev-master",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda"
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda",
-                "reference": "3490ba5925e6dcbe6de950c5c6b8dce9f6e96eda",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "shasum": ""
             },
             "require": {
@@ -362,7 +365,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -387,16 +390,18 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-04-03T15:59:15+00:00"
+            "time": "2019-11-01T11:05:21+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
         "ekowabaka/clearice": 0,
         "ntentan/config": 0,
         "ntentan/utils": 0,
+        "predis/predis": 0,
+        "monolog/monolog": 0,
         "ntentan/panie": 0
     },
     "prefer-stable": false,

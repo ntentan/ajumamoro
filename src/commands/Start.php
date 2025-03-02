@@ -72,7 +72,11 @@ class Start
                 ClearIce::output("Failed\nAn instance already exists.\n");
             }
         } else {
-            $this->runner->mainLoop();
+            try {
+                $this->runner->mainLoop();
+            } catch (\Exception $e) {
+                $this->logger->critical($e->getMessage());
+            }
         }
     }
 
