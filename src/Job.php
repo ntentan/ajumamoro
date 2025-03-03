@@ -21,12 +21,12 @@ abstract class Job
         return $this->attributes[$key];
     }
 
-    public function setId($id)
+    public final function setId($id)
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public final function getId()
     {
         return $this->id;
     }
