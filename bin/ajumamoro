@@ -88,14 +88,6 @@ $container->setup(
 
                 $argumentParser->enableHelp("Ajumamoro is a tool for running background tasks in PHP apps.");
                 return $argumentParser->parse();
-
-//                if (!isset($arguments['__command']) && isset($arguments['__args'[0]])) {
-//                    fwrite(STDERR, "You specified an unknown command [{$arguments['__args'][0]}]. Please use {$argv[0]} --help for more information.\n");
-//                    exit(120);
-//                } else if(!isset($arguments['__command'])) {
-//                    fwrite(STDERR, "Please provide a command or use {$argv[0]} --help for more information.\n");
-//                    exit(120);
-//                }
             },
             'singleton' => true
         ],
