@@ -5,15 +5,17 @@ namespace ajumamoro\brokers;
 use ajumamoro\BrokerInterface;
 use ajumamoro\exceptions\AjumamoroException;
 use ajumamoro\Job;
+use Psr\Log\LoggerInterface;
 
 class InlineBroker implements BrokerInterface
 {
-//    private $status;
     private string $jobInfoDir;
+    private LoggerInterface $logger;
 
-    public function __construct(array $brokerConfig)
+    public function __construct(LoggerInterface $logger, array $brokerConfig)
     {
         $this->jobInfoDir = $brokerConfig['jobs_path'] ?? 'jobs';
+        $this->logger = $logger;
     }
 
     public function get()
@@ -24,7 +26,9 @@ class InlineBroker implements BrokerInterface
     public function put($job)
     {
         $jobId = uniqid('job');
+        /** @var Job $job */
         $job = unserialize($job['object']);
+        $job->setLogger($this->logger);
         $job->setup();
         $job->go();
         $job->tearDown();
@@ -37,6 +41,7 @@ class InlineBroker implements BrokerInterface
         if(file_exists($path)) {
             return file_get_contents($path);
         }
+        return null;
     }
 
     public function setStatus($job, $status)
