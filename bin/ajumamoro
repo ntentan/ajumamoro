@@ -50,12 +50,12 @@ $container->setup(
                     'value' => 'PATH',
                     'command' => 'start'
                 ));
-                $argumentParser->addOption(array(
-                    'short_name' => 'l',
-                    'name' => 'load-class-files',
-                    'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
-                    'command' => 'start'
-                ));
+//                $argumentParser->addOption(array(
+//                    'short_name' => 'l',
+//                    'name' => 'load-class-files',
+//                    'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
+//                    'command' => 'start'
+//                ));
                 $argumentParser->addOption(array(
                     'short_name' => 'd',
                     'name' => 'daemon',
@@ -101,8 +101,9 @@ $container->setup(
         '$ajumamoroConfig:array' => [
             function (Container $container) {
                 $arguments = $container->get('$arguments:array');
-                if(isset($arguments['config']) && file_exists($arguments['config'])) {
-                    return parse_ini_file($arguments['config']);
+                $config = [];
+                if (isset($arguments['config']) && file_exists($arguments['config'])) {
+                    $config = parse_ini_file($arguments['config']);
                 } else if (!isset($arguments['config'])) {
                     fwrite(STDERR, "Please provide a valid configuration with the --config option\n");
                     exit(120);
@@ -110,10 +111,17 @@ $container->setup(
                     fwrite(STDERR, "Failed to read the configuration file {$arguments['config']}\n");
                     exit(120);
                 }
+
+                // Override a few of the configuration file settings with command arguments
+                if (isset($arguments['bootstrap'])) {
+                    $config['bootstrap'] = $arguments['bootstrap'];
+                }
+
+                return $config;
             },
             'singleton' => true
         ],
-        BrokerInterface::class => function(Container $container) {
+        BrokerInterface::class => [function(Container $container) {
             $config = $container->get('$ajumamoroConfig:array');
             if (!isset($config['broker'])) {
                 throw new AjumamoroException("There is no job broker specified in the configuration file.");
@@ -121,7 +129,7 @@ $container->setup(
 
             $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($config['broker']). "Broker";
             return $container->get($brokerClass);
-        },
+        }, 'singleton' => true],
         Command::class => function($container) {
             $arguments = $container->get('$arguments:array');
             $class = "\\ajumamoro\\commands\\" . ucfirst($arguments['__command']);

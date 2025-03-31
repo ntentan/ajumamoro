@@ -10,19 +10,16 @@ use ajumamoro\Runner;
 class Start implements Command
 {
 
-    private $logger;
-    private $runner;
-    private $config;
-    private $broker;
+    private LoggerInterface $logger;
+    private Runner $runner;
 
-    public function __construct(LoggerInterface $logger, BrokerInterface $broker, Runner $runner)
+    public function __construct(LoggerInterface $logger, Runner $runner)
     {
         $this->logger = $logger;
-        $this->broker = $broker;
         $this->runner = $runner;
     }
 
-    private function checkExistingInstance()
+    private function checkExistingInstance(): bool
     {
         $pidFile = Config::get('ajumamoro:pid_file', './.ajumamoro.pid');
         if (file_exists($pidFile) && is_readable($pidFile)) {
@@ -43,7 +40,7 @@ class Start implements Command
         }
     }
 
-    private function startDaemon($options)
+    private function startDaemon($options): int
     {
         $pid = pcntl_fork();
         if ($pid == -1) {
@@ -58,25 +55,26 @@ class Start implements Command
         return $pid;
     }
 
-    public function run($options = [])
+    public function run($options = []): void
     {
         
         if (isset($options['daemon'])) {
-            ClearIce::output("Starting ajumamoro daemon ... ");
+            echo("Starting ajumamoro daemon ... ");
 
             if ($this->checkExistingInstance() === false) {
                 $pid = $this->startDaemon($options);
-                ClearIce::output($pid > 0 ? "OK [PID:$pid]\n" : "Failed\n");
+                echo($pid > 0 ? "OK [PID:$pid]\n" : "Failed\n");
             } else {
-                ClearIce::output("Failed\nAn instance already exists.\n");
+                echo("Failed\nAn instance of a ajumamoro is already running. You can supply a different PID file path if you want to run multiple instances.\n");
             }
         } else {
             try {
                 $this->runner->mainLoop();
             } catch (\Exception $e) {
-                $this->logger->critical($e->getMessage());
+                $classname = get_class($e);
+                $this->logger->critical("Failed to start runner. An exception of [{$classname}] was thrown {$e->getMessage()} on line {$e->getLine()} of {$e->getFile()}");
+                $this->logger->debug($e->getTraceAsString());
             }
         }
     }
-
 }

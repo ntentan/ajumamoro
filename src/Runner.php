@@ -13,44 +13,36 @@ class Runner
 {
     /**
      * The id of the current job being executed.
-     *
-     * @var int
      */
-    private $currentJobId;
+    private int $currentJobId;
 
     /**
      * An instance of a logger interface used for logging job output.
-     *
-     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * Holds the configuration for this ajumamoro instance.
-     *
-     * @var Config
      */
-    private $config;
+    private array $config;
 
     /**
      * An instance of the broker from which jobs are received.
-     *
-     * @var BrokerInterface
      */
-    private $broker;
+    private BrokerInterface $broker;
     
     /**
      * Create a new Runner instance
      *
      * @param LoggerInterface $logger A logger to log all runner events and job output to.
      * @param BrokerInterface $broker A broker to use in receiving and distributing jobs.
-     * @param Config $config Configurations for the broker and ajumamoro as a whole.
+     * @param array $ajumamoroConfig Configurations for the broker and ajumamoro as a whole.
      */
-    public function __construct(LoggerInterface $logger, BrokerInterface $broker, Config $config)
+    public function __construct(LoggerInterface $logger, BrokerInterface $broker, array $ajumamoroConfig)
     {
         $this->logger = $logger;
         $this->broker = $broker;
-        $this->config = $config;
+        $this->config = $ajumamoroConfig;
     }
 
     /**
@@ -59,7 +51,7 @@ class Runner
      * @param \Exception $exception
      * @param string $prefix
      */
-    public function logException(\Exception $exception, $prefix = "Exception thrown")
+    private function logException(\Exception $exception, string $prefix = "Exception thrown"): void
     {
         $class = new \ReflectionClass($exception);
         $this->logger->critical("$prefix [{$class->getName()}] {$exception->getMessage()} on line {$exception->getLine()} of {$exception->getFile()}\n");
@@ -68,10 +60,8 @@ class Runner
 
     /**
      * Actually run a job and log any exceptions or status messages.
-     *
-     * @param \ajumamoro\Job $job
      */
-    private function runJob($job)
+    private function runJob(Job $job): void
     {
         try {
             $this->logger->notice("Job #{$this->currentJobId} [{$job->getName()}] started.");
@@ -102,7 +92,7 @@ class Runner
      * @param Job $job
      * @return void
      */
-    private function executeJob(Job $job)
+    private function executeJob(Job $job): void
     {
         $this->currentJobId = $job->getId();
         $job->setLogger($this->logger);
@@ -127,12 +117,12 @@ class Runner
      *
      * @return void
      */
-    public function mainLoop()
+    public function mainLoop(): void
     {
-        $bootstrap = $this->config->get('bootstrap');
+        $bootstrap = realpath($this->config['bootstrap'] ?? '');
         if ($bootstrap) {
             (function () {
-                require $this->config->get('bootstrap');
+                require $this->config['bootstrap'];
             })();
         }
         $this->logger->info("Ajumamoro");
@@ -146,26 +136,32 @@ class Runner
         );
 
         // Get Store;
-        $delay = $this->config->get('delay', 200);
+        $delay = $this->config['delay'] ?? 200;
 
         do {
-            $job = $this->getNextJob();
+            $this->logger->info("Waiting for the next job.");
+            try {
+                $job = $this->getNextJob();
 
-            if ($job !== false) {
-                $this->executeJob($job);
-            } else {
-                usleep($delay);
+                if ($job !== false) {
+                    $this->executeJob($job);
+                } else {
+                    $this->logger->info("Delaying for {$delay} milliseconds.");
+                    usleep($delay);
+                }
+            } catch (\Exception $e) {
+                $this->logException($e);
             }
         } while (true);
     }
 
     /**
      * Get the next job from the broker if any exists.
-     * Ths function actuall polls the broker for any pending jobs to be executed.
+     * Ths function actually polls the broker for any pending jobs to be executed.
      *
      * @return bool|Job
      */
-    public function getNextJob()
+    public function getNextJob(): bool|Job
     {
         $jobInfo = $this->broker->get();
 
