@@ -1,8 +1,7 @@
-Unreleased
-==========
+v0.5.0 - 2025-04-06
+===================
 Added
 -----
-- 
 - The logger was added to the inline broker to improve its compatibility with other brokers.
 - Improved the code with typehints in various places.
 

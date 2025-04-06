@@ -54,16 +54,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.8.1",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "aef6ee73a77a66e404dd6540934a9ef1b3c855b4"
+                "reference": "10d85740180ecba7896c87e06a166e0c95a0e3b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/aef6ee73a77a66e404dd6540934a9ef1b3c855b4",
-                "reference": "aef6ee73a77a66e404dd6540934a9ef1b3c855b4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/10d85740180ecba7896c87e06a166e0c95a0e3b6",
+                "reference": "10d85740180ecba7896c87e06a166e0c95a0e3b6",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.8.1"
+                "source": "https://github.com/Seldaek/monolog/tree/3.9.0"
             },
             "funding": [
                 {
@@ -153,7 +153,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-05T17:15:07+00:00"
+            "time": "2025-03-24T10:02:05+00:00"
         },
         {
             "name": "ntentan/config",
@@ -198,20 +198,20 @@
         },
         {
             "name": "ntentan/panie",
-            "version": "v0.9.0",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ntentan/panie.git",
-                "reference": "c11c49da6730d7895b78eb1585cbf30e7bac455d"
+                "reference": "b315b9a6c66a06827ef11b6d8fe87feb9a4fa29c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ntentan/panie/zipball/c11c49da6730d7895b78eb1585cbf30e7bac455d",
-                "reference": "c11c49da6730d7895b78eb1585cbf30e7bac455d",
+                "url": "https://api.github.com/repos/ntentan/panie/zipball/b315b9a6c66a06827ef11b6d8fe87feb9a4fa29c",
+                "reference": "b315b9a6c66a06827ef11b6d8fe87feb9a4fa29c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1",
+                "php": ">=8.2",
                 "psr/container": "^1.0"
             },
             "require-dev": {
@@ -237,9 +237,9 @@
             "description": "A thin DI container for NtentanFX",
             "support": {
                 "issues": "https://github.com/ntentan/panie/issues",
-                "source": "https://github.com/ntentan/panie/tree/v0.9.0"
+                "source": "https://github.com/ntentan/panie/tree/v0.9.1"
             },
-            "time": "2025-01-19T02:27:23+00:00"
+            "time": "2025-04-05T14:56:10+00:00"
         },
         {
             "name": "ntentan/utils",
