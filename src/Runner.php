@@ -119,10 +119,10 @@ class Runner
      */
     public function mainLoop(): void
     {
-        $bootstrap = realpath($this->config['bootstrap'] ?? '');
-        if ($bootstrap) {
-            (function () {
-                require $this->config['bootstrap'];
+        $bootstrapScript = $this->config['arguments']['bootstrap'];
+        if (isset($bootstrapScript) && file_exists($bootstrapScript)) {
+            (function () use ($bootstrapScript) {
+                require $bootstrapScript;
             })();
         }
         $this->logger->info("Ajumamoro");
@@ -165,15 +165,15 @@ class Runner
     {
         $jobInfo = $this->broker->get();
 
-        if (!class_exists($jobInfo['class'])) {
+        if (!class_exists($jobInfo->class)) {
             $this->logger->error("Class {$jobInfo['class']} for scheduled job not found");
             return false;
         }
 
-        $job = unserialize($jobInfo['object']);
+        $job = unserialize($jobInfo->serialized);
 
         if (is_object($job) && is_a($job, '\ajumamoro\Job')) {
-            $job->setId($jobInfo['id']);
+            $job->setId($jobInfo->id);
             return $job;
         } else {
             $this->logger->error("Scheduled job is not of type \\ajumamoro\\Job");

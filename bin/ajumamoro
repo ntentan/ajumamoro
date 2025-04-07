@@ -93,17 +93,10 @@ $container->setup(
         ],
         '$brokerConfig:array' => [
             function (Container $container) {
-                $ajumamoroConfig = $container->get('$ajumamoroConfig:array');
-                return $ajumamoroConfig[$ajumamoroConfig['broker'] ?? 'default'] ?? [];
-            },
-            'singleton' => true
-        ],
-        '$ajumamoroConfig:array' => [
-            function (Container $container) {
                 $arguments = $container->get('$arguments:array');
                 $config = [];
                 if (isset($arguments['config']) && file_exists($arguments['config'])) {
-                    $config = parse_ini_file($arguments['config']);
+                    $config = parse_ini_file($arguments['config'], true);
                 } else if (!isset($arguments['config'])) {
                     fwrite(STDERR, "Please provide a valid configuration with the --config option\n");
                     exit(120);
@@ -111,18 +104,20 @@ $container->setup(
                     fwrite(STDERR, "Failed to read the configuration file {$arguments['config']}\n");
                     exit(120);
                 }
-
-                // Override a few of the configuration file settings with command arguments
-                if (isset($arguments['bootstrap'])) {
-                    $config['bootstrap'] = $arguments['bootstrap'];
-                }
-
-                return $config;
+                return $config['jobs'];
+            },
+            'singleton' => true
+        ],
+        '$ajumamoroConfig:array' => [
+            function (Container $container) {
+                $arguments = $container->get('$arguments:array');
+                $brokerConfig = $container->get('$brokerConfig:array');
+                return ['arguments' => $arguments, 'broker_config' => $brokerConfig];
             },
             'singleton' => true
         ],
         BrokerInterface::class => [function(Container $container) {
-            $config = $container->get('$ajumamoroConfig:array');
+            $config = $container->get('$brokerConfig:array');
             if (!isset($config['broker'])) {
                 throw new AjumamoroException("There is no job broker specified in the configuration file.");
             }

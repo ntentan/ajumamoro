@@ -1,60 +1,43 @@
 <?php
-
 namespace ajumamoro\brokers;
 
 use ajumamoro\BrokerInterface;
-use ajumamoro\exceptions\BrokerConnectionException;
+use ajumamoro\Job;
+use ajumamoro\JobInfo;
 use Predis\Client;
-use Predis\CommunicationException;
 
 /**
- * Redis messaging broker used for running AjumaMoro Jobs
- *
- * @author ekow
+ * Redis messaging broker used for running AjumaMoro Jobs.
  */
 class RedisBroker implements BrokerInterface
 {
-
     /**
-     * Instance of the redis client
-     * @var Client
+     * Instance of the redis client.
      */
-    private $redis;
+    private ?Client $redis = null;
 
-    private $config;
+    private array $config;
 
     /**
      * RedisBroker constructor.
-     *
-     * @param $config Takes an array of options for the redis connection.
-     * @throws BrokerConnectionException
      */
-    public function __construct(array $ajumamoroConfig)
+    public function __construct(array $brokerConfig)
     {
-        $this->config = $ajumamoroConfig;
+        $this->config = $brokerConfig;
     }
 
-    private function getRedis()
+    private function getRedis(): Client
     {
-        if(!$this->redis) {
+        if($this->redis === null) {
             $this->redis = new Client($this->config['parameters'] ?? null, $this->config['options'] ?? null);
-            try {
-                $this->redis->connect();
-            } catch (CommunicationException $ex) {
-                throw new BrokerConnectionException(
-                    "Failed to connect to redis broker: {$ex->getMessage()}"
-                );
-            }
         }
         return $this->redis;
     }
 
     /**
      * Get the next job on the job queue.
-     *
-     * @return mixed Job
      */
-    public function get()
+    public function get(): JobInfo
     {
         do {
             $response = $this->getRedis()->rpop("job_queue");
@@ -65,39 +48,29 @@ class RedisBroker implements BrokerInterface
 
     /**
      * Add a job to the queue.
-     *
      * @param mixed $job
-     * @return int
      */
-    public function put($job)
+    public function put(JobInfo $job): string
     {
         $redis = $this->getRedis();
-        $job['id'] = $redis->incr("job_id_sequence");
+        $job->id = $redis->incr("job_id_sequence");
         $redis->lpush("job_queue", serialize($job));
-        return $job['id'];
+        return $job->id;
     }
 
     /**
      * Get the status of a job on the queue.
-     *
-     * @param $jobId
-     * @return string
      */
-    public function getStatus($jobId)
+    public function getStatus(string $jobId): array
     {
         return json_decode($this->getRedis()->get("job_status:$jobId"), true);
     }
 
     /**
      * Set the status of a job on the queue.
-     *
-     * @param $jobId
-     * @param $status
-     * @return mixed
      */
-    public function setStatus($jobId, $status)
+    public function setStatus(string $jobId, array $status): void
     {
-        return $this->getRedis()->set("job_status:$jobId", json_encode($status));
+        $this->getRedis()->set("job_status:$jobId", json_encode($status));
     }
-
 }

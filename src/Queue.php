@@ -7,7 +7,7 @@ use ntentan\utils\Text;
 
 class Queue
 {
-    private $broker;
+    private BrokerInterface $broker;
 
     /**
      * Queue constructor.
@@ -24,12 +24,9 @@ class Queue
      * @param Job $job
      * @return string
      */
-    public function add(Job $job)
+    public function add(Job $job): string
     {
-        $jobClass = new \ReflectionClass($job);
-        $name = $jobClass->getName();
-        $object = serialize($job);
-        $jobId = $this->broker->put(['object' => $object, 'class' => $name]);
+        $jobId = $this->broker->put(new JobInfo($job)); //['object' => $object, 'class' => $name]);
         $this->broker->setStatus($jobId,
             ['status' => Job::STATUS_QUEUED, 'queued'=> date(DATE_RFC3339_EXTENDED)]
         );
@@ -38,11 +35,8 @@ class Queue
 
     /**
      * Retrieves the status of a job on the queue.
-     *
-     * @param string $jobId id of the job
-     * @return string A string containing a description of the job's status.
      */
-    public function getJobStatus($jobId)
+    public function getJobStatus($jobId): array
     {
         return $this->broker->getStatus($jobId);
     }

@@ -4,8 +4,8 @@ namespace ajumamoro;
 
 interface BrokerInterface
 {
-    public function put($job);
-    public function get();
-    public function getStatus($job);
-    public function setStatus($job, $status);
+    public function put(JobInfo $job): string;
+    public function get(): JobInfo;
+    public function getStatus(string $jobId): array;
+    public function setStatus(string $jobId, array $status): void;
 }
