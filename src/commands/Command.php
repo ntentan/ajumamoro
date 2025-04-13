@@ -4,5 +4,5 @@ namespace ajumamoro\commands;
 
 interface Command
 {
-    public function run();
+    public function run(): int;
 }

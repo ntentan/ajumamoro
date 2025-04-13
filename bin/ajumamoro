@@ -130,9 +130,14 @@ $container->setup(
         }
     ]);
 
+$exitCode = 0;
+
 try {
-    $container->get(Command::class)->run();
+    $exitCode = $container->get(Command::class)->run();
 } catch (\Exception $e) {
-    $container->get(LoggerInterface::class)->error(sprintf("Ajumamoro failed to startup. An exception %s was thrown. %s", get_class($e), $e->getMessage()));
-    throw $e;
+    $logger = $container->get(LoggerInterface::class);
+    $logger->error(sprintf("Ajumamoro failed to startup. An exception %s was thrown. %s", get_class($e), $e->getMessage()));
+    $logger->debug($e->getTraceAsString());
 }
+
+exit($exitCode ?? 0);

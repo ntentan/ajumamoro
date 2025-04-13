@@ -51,9 +51,13 @@ class RedisBroker implements BrokerInterface
      */
     public function put(JobInfo $job): string
     {
-        $job->id = $this->client->incr("job_id_sequence");
-        $this->client->lpush("job_queue", serialize($job));
-        return $job->id;
+        try {
+            $job->id = $this->client->incr("job_id_sequence");
+            $this->client->lpush("job_queue", serialize($job));
+            return $job->id;
+        } catch (ConnectionException $e) {
+            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -61,7 +65,11 @@ class RedisBroker implements BrokerInterface
      */
     public function getStatus(string $jobId): array
     {
-        return json_decode($this->client->get("job_status:$jobId"), true);
+        try {
+            return json_decode($this->client->get("job_status:$jobId"), true);
+        } catch (ConnectionException $e) {
+            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -69,6 +77,11 @@ class RedisBroker implements BrokerInterface
      */
     public function setStatus(string $jobId, array $status): void
     {
-        $this->client->set("job_status:$jobId", json_encode($status));
+        try {
+            $this->client->set("job_status:$jobId", json_encode($status));
+        } catch (ConnectionException $e) {
+            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
+        }
+
     }
 }

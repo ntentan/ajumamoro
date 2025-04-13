@@ -55,7 +55,7 @@ class Start implements Command
         return $pid;
     }
 
-    public function run($options = []): void
+    public function run($options = []): int
     {
         if (isset($options['daemon'])) {
             echo("Starting ajumamoro daemon ... ");
@@ -75,5 +75,7 @@ class Start implements Command
                 $this->logger->debug($e->getTraceAsString());
             }
         }
+
+        return 2;
     }
 }
