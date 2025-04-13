@@ -1,10 +1,9 @@
 <?php
-
 namespace ajumamoro;
 
+use ajumamoro\exceptions\BrokerException;
+use Predis\Connection\ConnectionException;
 use Psr\Log\LoggerInterface;
-use ntentan\config\Config;
-use ajumamoro\BrokerInterface;
 
 /**
  * Runs the main loop of ajumamoro
@@ -14,7 +13,7 @@ class Runner
     /**
      * The id of the current job being executed.
      */
-    private int $currentJobId;
+    private int|null $currentJobId = null;
 
     /**
      * An instance of a logger interface used for logging job output.
@@ -32,11 +31,7 @@ class Runner
     private BrokerInterface $broker;
     
     /**
-     * Create a new Runner instance
-     *
-     * @param LoggerInterface $logger A logger to log all runner events and job output to.
-     * @param BrokerInterface $broker A broker to use in receiving and distributing jobs.
-     * @param array $ajumamoroConfig Configurations for the broker and ajumamoro as a whole.
+     * Create a new Runner instance.
      */
     public function __construct(LoggerInterface $logger, BrokerInterface $broker, array $ajumamoroConfig)
     {
@@ -47,9 +42,6 @@ class Runner
 
     /**
      * Logs any exceptions that are thrown by running jobs.
-     *
-     * @param \Exception $exception
-     * @param string $prefix
      */
     private function logException(\Exception $exception, string $prefix = "Exception thrown"): void
     {
@@ -88,9 +80,6 @@ class Runner
 
     /**
      * Fork off this process and wait while job is executed.
-     *
-     * @param Job $job
-     * @return void
      */
     private function executeJob(Job $job): void
     {
@@ -114,8 +103,6 @@ class Runner
 
     /**
      * The runners main loop that waits on the broker for jobs.
-     *
-     * @return void
      */
     public function mainLoop(): void
     {
@@ -125,15 +112,7 @@ class Runner
                 require $bootstrapScript;
             })();
         }
-        $this->logger->info("Ajumamoro");
-        set_error_handler(
-            function ($no, $message, $file, $line) {
-                $this->logger->error(
-                    "Job #{$this->currentJobId} Error: $message on line $line of $file"
-                );
-            },
-            E_WARNING
-        );
+        $this->logger->info("Ajumamoro started.");
 
         // Get Store;
         $delay = $this->config['delay'] ?? 200;
@@ -142,13 +121,14 @@ class Runner
             $this->logger->info("Waiting for the next job.");
             try {
                 $job = $this->getNextJob();
-
                 if ($job !== false) {
                     $this->executeJob($job);
                 } else {
                     $this->logger->info("Delaying for {$delay} milliseconds.");
                     usleep($delay);
                 }
+            } catch (BrokerException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $this->logException($e);
             }

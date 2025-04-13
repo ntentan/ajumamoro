@@ -57,7 +57,6 @@ class Start implements Command
 
     public function run($options = []): void
     {
-        
         if (isset($options['daemon'])) {
             echo("Starting ajumamoro daemon ... ");
 
@@ -72,7 +71,7 @@ class Start implements Command
                 $this->runner->mainLoop();
             } catch (\Exception $e) {
                 $classname = get_class($e);
-                $this->logger->critical("Failed to start runner. An exception of [{$classname}] was thrown {$e->getMessage()} on line {$e->getLine()} of {$e->getFile()}");
+                $this->logger->error("Failed to start the Ajumamoro runner. An exception of [{$classname}] was thrown {$e->getMessage()} on line {$e->getLine()} of {$e->getFile()}");
                 $this->logger->debug($e->getTraceAsString());
             }
         }

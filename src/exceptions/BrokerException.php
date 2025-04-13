@@ -13,7 +13,7 @@ namespace ajumamoro\exceptions;
  *
  * @author ekow
  */
-class BrokerConnectionException extends AjumamoroException
+class BrokerException extends AjumamoroException
 {
     
 }

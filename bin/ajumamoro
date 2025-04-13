@@ -17,6 +17,7 @@ use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
 use ajumamoro\exceptions\AjumamoroException;
 use ajumamoro\commands\Command;
+use Predis\Client;
 
 // Setup DI bindings
 $container = new Container();
@@ -50,12 +51,6 @@ $container->setup(
                     'value' => 'PATH',
                     'command' => 'start'
                 ));
-//                $argumentParser->addOption(array(
-//                    'short_name' => 'l',
-//                    'name' => 'load-class-files',
-//                    'help' => 'forces ajumamoro to load php files of the job classes. By default ajumamoro depends on the autoloader to handle the loading of class files.',
-//                    'command' => 'start'
-//                ));
                 $argumentParser->addOption(array(
                     'short_name' => 'd',
                     'name' => 'daemon',
@@ -116,12 +111,15 @@ $container->setup(
             },
             'singleton' => true
         ],
+        Client::class => function (Container $container) {
+            $config = $container->get('$brokerConfig:array');
+            return new Client($config['redis.host'], ['exceptions' => true]);
+        },
         BrokerInterface::class => [function(Container $container) {
             $config = $container->get('$brokerConfig:array');
             if (!isset($config['broker'])) {
                 throw new AjumamoroException("There is no job broker specified in the configuration file.");
             }
-
             $brokerClass = "\\ajumamoro\\brokers\\" . Text::ucamelize($config['broker']). "Broker";
             return $container->get($brokerClass);
         }, 'singleton' => true],
