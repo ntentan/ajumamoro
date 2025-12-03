@@ -54,7 +54,7 @@ abstract class Job
     /**
      * @return LoggerInterface
      */
-    protected function getLogger()
+    protected function getLogger(): LoggerInterface
     {
         return $this->logger;
     }
