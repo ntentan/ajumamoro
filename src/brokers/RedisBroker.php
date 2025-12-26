@@ -31,13 +31,9 @@ class RedisBroker implements BrokerInterface
     public function get(): JobInfo
     {
         do {
-//            try {
             $response = $this->client->rpop("job_queue");
             usleep($this->config['redis.sleep_time'] ?? 500);
-//            } catch (PredisException $e) {
-//                throw new BrokerException($e->getMessage(), $e->getCode(), $e);
-//            }
-        } while ($response === null);
+        } while ($response === null || $response === "");
         return unserialize($response);
     }
 
@@ -47,13 +43,9 @@ class RedisBroker implements BrokerInterface
      */
     public function put(JobInfo $job): string
     {
-//        try {
-            $job->id = $this->client->incr("job_id_sequence");
-            $this->client->lpush("job_queue", serialize($job));
-            return $job->id;
-//        } catch (ConnectionException $e) {
-//            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
-//        }
+        $job->id = $this->client->incr("job_id_sequence");
+        $this->client->lpush("job_queue", serialize($job));
+        return $job->id;
     }
 
     /**
@@ -61,11 +53,7 @@ class RedisBroker implements BrokerInterface
      */
     public function getStatus(string $jobId): array
     {
-//        try {
-            return json_decode($this->client->get("job_status:$jobId"), true);
-//        } catch (ConnectionException $e) {
-//            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
-//        }
+        return json_decode($this->client->get("job_status:$jobId"), true);
     }
 
     /**
@@ -73,11 +61,6 @@ class RedisBroker implements BrokerInterface
      */
     public function setStatus(string $jobId, array $status): void
     {
-//        try {
-            $this->client->set("job_status:$jobId", json_encode($status));
-//        } catch (ConnectionException $e) {
-//            throw new BrokerException($e->getMessage(), $e->getCode(), $e);
-//        }
-
+        $this->client->set("job_status:$jobId", json_encode($status));
     }
 }

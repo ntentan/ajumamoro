@@ -17,6 +17,7 @@ use ntentan\utils\Text;
 use ajumamoro\BrokerInterface;
 use ajumamoro\exceptions\AjumamoroException;
 use ajumamoro\commands\Command;
+use ajumamoro\brokers\redis\RedisClient;
 use Predis\Client;
 
 // Setup DI bindings
@@ -111,10 +112,11 @@ $container->setup(
             },
             'singleton' => true
         ],
-        Client::class => function (Container $container) {
+        RedisClient::class => [function (Container $container) {
             $config = $container->get('$brokerConfig:array');
-            return new Client($config['redis.host'], ['exceptions' => true]);
-        },
+            $factory = new \ajumamoro\brokers\redis\RedisClientFactory($config);
+            return $factory->createClient();
+        }, 'singleton' => true],
         BrokerInterface::class => [function(Container $container) {
             $config = $container->get('$brokerConfig:array');
             if (!isset($config['broker'])) {

@@ -2,12 +2,14 @@
 
 namespace ajumamoro\brokers\redis;
 
-readonly class PredisClient implements RedisClient
+use Predis\Client;
+
+class PredisClient implements RedisClient
 {
 
-    private PredisClient $client;
+    private Client $client;
 
-    public function __construct(PredisClient $client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
     }
