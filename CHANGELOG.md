@@ -1,3 +1,10 @@
+v0.6.0 - 2025-12-25
+===================
+Added
+-----
+- Additional support for the PHP Redis extension in addition to the predis client.
+
+
 v0.5.0 - 2025-04-06
 ===================
 Added
