@@ -36,6 +36,7 @@ class PredisClient implements RedisClient
 
     public function set(string $key, string $value): int
     {
-        return $this->client->set($key, $value);
+        $status = $this->client->set($key, $value);
+        return $status->getPayload() === 'OK' ? 1 : 0;
     }
 }
